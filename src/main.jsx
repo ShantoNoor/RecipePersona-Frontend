@@ -1,11 +1,14 @@
+import "./index.css";
+
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import "./index.css";
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
-import SignUp from "./pages/SignUp";
+import Login from "./pages/Login";
+import { ThemeProvider } from "./components/ui/theme-provider";
 
 const router = createBrowserRouter([
   {
@@ -20,8 +23,8 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       {
-        path: "/sign-up",
-        element: <SignUp />,
+        path: "/login",
+        element: <Login />,
       },
     ],
   },
@@ -29,6 +32,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
