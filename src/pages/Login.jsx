@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import useAuth from "@/hooks/useAuth";
 import useRedirect from "@/hooks/useRedirect";
+import Image from "@/components/Image";
 
 const MotionFormLabel = motion(FormLabel);
 const MotionFormDescription = motion(FormDescription);
@@ -255,7 +256,7 @@ export default function Login() {
           </div>
         </div>
         <div className="hidden bg-muted lg:block">
-          <img
+          <Image
             src="https://data.ipic.ai/images/8lodJaPQi04rGQw_1694737137.png"
             alt="Image"
             width="1920"
