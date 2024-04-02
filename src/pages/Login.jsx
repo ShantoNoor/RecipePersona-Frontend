@@ -15,7 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast } from "sonner";
+import useAuth from "@/hooks/useAuth";
+import useRedirect from "@/hooks/useRedirect";
 
 const MotionFormLabel = motion(FormLabel);
 const MotionFormDescription = motion(FormDescription);
@@ -25,6 +26,10 @@ const MotionButton = motion(Button);
 
 export default function Login() {
   const [signup, setSignup] = useState(false);
+
+  const { googlePopUp, signUp, signIn, updateProfile } = useAuth();
+
+  const redirect = useRedirect();
 
   const formSchema = z.object({
     name: z
@@ -51,14 +56,18 @@ export default function Login() {
     defaultValues: { email: "", password: "", name: "" },
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.name === "aaaa") {
-      console.log("login");
-      toast("hi");
+      //login
+      await signIn(data.email, data.password);
     } else {
-      console.log("signup");
-      toast("hello");
+      // sign-up
+      const res = await signUp(data.email, data.password);
+      if (res?.email) await updateProfile(data.name, "");
     }
+
+    form.reset();
+    redirect();
   };
 
   return (
@@ -211,6 +220,11 @@ export default function Login() {
                     layout
                     variant="outline"
                     className="w-full flex justify-center items-center gap-2"
+                    onClick={async () => {
+                      await googlePopUp();
+                      redirect();
+                    }}
+                    type="button"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

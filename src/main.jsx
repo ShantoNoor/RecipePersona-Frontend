@@ -10,6 +10,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { ThemeProvider } from "./components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import AuthProvider from "./components/AuthProvider";
 
 const router = createBrowserRouter([
   {
@@ -34,8 +35,14 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <RouterProvider router={router} />
-      <Toaster position="top-right" closeButton richColors />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+      <Toaster
+        position="top-right"
+        closeButton
+        richColors
+      />
     </ThemeProvider>
   </React.StrictMode>
 );
