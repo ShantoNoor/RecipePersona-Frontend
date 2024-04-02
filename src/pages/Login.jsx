@@ -15,6 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { toast } from "sonner";
 
 const MotionFormLabel = motion(FormLabel);
 const MotionFormDescription = motion(FormDescription);
@@ -53,8 +54,10 @@ export default function Login() {
   const onSubmit = (data) => {
     if (data.name === "aaaa") {
       console.log("login");
+      toast("hi");
     } else {
       console.log("signup");
+      toast("hello");
     }
   };
 
