@@ -9,11 +9,33 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { ModeToggle } from "./ui/mode-toggle";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import useAuth from "@/hooks/useAuth";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { cn } from "@/utils/utils";
+
+const NLink = ({ children, className, ...props }) => (
+  <NavLink
+    {...props}
+    className={({ isActive, isPending }) =>
+      isPending
+        ? "pending"
+        : isActive
+        ? cn(
+            className,
+            "active transition-colors text-primary/90 hover:text-primary"
+          )
+        : cn(
+            className,
+            "transition-colors text-foreground/90 hover:text-foreground"
+          )
+    }
+  >
+    {children}
+  </NavLink>
+);
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
@@ -36,23 +58,10 @@ const Navbar = () => {
           </Link>
 
           {links.map((link, idx) => (
-            <Link
-              key={idx}
-              to={link.to}
-              className="text-foreground transition-colors hover:text-foreground"
-            >
+            <NLink key={idx} to={link.to}>
               {link.text}
-            </Link>
+            </NLink>
           ))}
-
-          {!user && (
-            <Link
-              to="/login"
-              className="text-foreground transition-colors hover:text-foreground"
-            >
-              Login
-            </Link>
-          )}
         </nav>
         <Sheet>
           <SheetTrigger asChild>
@@ -78,22 +87,18 @@ const Navbar = () => {
                 <span className="text-nowrap">Recipe Persona</span>
               </Link>
               {links.map((link, idx) => (
-                <Link key={idx} to={link.to} className="hover:text-foreground">
+                <NLink key={idx} to={link.to}>
                   {link.text}
-                </Link>
+                </NLink>
               ))}
-              {!user && (
-                <Link to="/login" className="hover:text-foreground">
-                  Login
-                </Link>
-              )}
+              {!user && <Link to="/login">Login</Link>}
             </nav>
           </SheetContent>
         </Sheet>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <div className="flex-1" />
           <ModeToggle />
-          {user && (
+          {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -117,6 +122,11 @@ const Navbar = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <Link to="/add-recipe">
+                  <DropdownMenuItem className="cursor-pointer">
+                    Add Recipe
+                  </DropdownMenuItem>
+                </Link>
                 <Link to="/my-profile">
                   <DropdownMenuItem className="cursor-pointer">
                     My Profile
@@ -136,6 +146,8 @@ const Navbar = () => {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+          ) : (
+            <NLink to="/login">Login</NLink>
           )}
         </div>
       </header>
