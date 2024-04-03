@@ -1,4 +1,4 @@
-import { CircleUser, Menu, Search, UtensilsCrossed } from "lucide-react";
+import { CircleUser, Menu, UtensilsCrossed } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -11,7 +11,6 @@ import {
 import { ModeToggle } from "./ui/mode-toggle";
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
-import { Input } from "./ui/input";
 import useAuth from "@/hooks/useAuth";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,7 +25,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background">
+      <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background z-[1]">
         <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
           <Link
             to="/"

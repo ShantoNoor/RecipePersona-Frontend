@@ -1,11 +1,12 @@
 import { UtensilsCrossed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Separator } from "./ui/separator";
 
 const Footer = () => {
   const navigate = useNavigate();
   return (
     <footer className="mb-4">
-      <hr className="mb-4" />
+      <Separator orientation="horizontal" className="mb-4" />
       <div className="mx-auto items-center justify-between md:flex">
         <div
           className="inline-flex items-center cursor-pointer"
