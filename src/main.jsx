@@ -20,7 +20,9 @@ const router = createBrowserRouter([
     element: (
       <main className="container">
         <Navbar />
-        <Outlet />
+        <div className="mt-3">
+          <Outlet />
+        </div>
         <Footer />
       </main>
     ),
