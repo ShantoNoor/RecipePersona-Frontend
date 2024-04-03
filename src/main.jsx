@@ -20,19 +20,17 @@ const router = createBrowserRouter([
     element: (
       <main className="container">
         <Navbar />
-        <div className="mt-3">
+        <div className="my-4">
           <Outlet />
         </div>
         <Footer />
       </main>
     ),
-    children: [
-      { path: "/", element: <Home /> },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-    ],
+    children: [{ path: "/", element: <Home /> }],
+  },
+  {
+    path: "/login",
+    element: <Login />,
   },
 ]);
 
