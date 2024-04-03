@@ -11,22 +11,31 @@ import Spinner from "./components/Spinner";
 
 const Navbar = React.lazy(() => import("./components/Navbar"));
 const Footer = React.lazy(() => import("./components/Footer"));
-const Home = React.lazy(() => import("./pages/Home"));
 const Login = React.lazy(() => import("./pages/Login"));
+const Home = React.lazy(() => import("./pages/Home"));
+
+const Recipes = React.lazy(() => import("./pages/Recipes"));
+const MyRecipes = React.lazy(() => import("./pages/MyRecipes"));
+const MyProfile = React.lazy(() => import("./pages/MyProfile"));
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <main className="container">
+      <main className="container flex flex-col min-h-screen">
         <Navbar />
-        <div className="my-4">
+        <div className="my-4 flex-1">
           <Outlet />
         </div>
         <Footer />
       </main>
     ),
-    children: [{ path: "/", element: <Home /> }],
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "/recipes", element: <Recipes /> },
+      { path: "/my-recipes", element: <MyRecipes /> },
+      { path: "/my-profile", element: <MyProfile /> },
+    ],
   },
   {
     path: "/login",

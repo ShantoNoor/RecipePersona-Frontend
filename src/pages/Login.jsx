@@ -58,7 +58,7 @@ export default function Login() {
   });
 
   const onSubmit = async (data) => {
-    if (data.name === "aaaa") {
+    if (data.name === "aaaa" && !signup) {
       //login
       await signIn(data.email, data.password);
     } else {

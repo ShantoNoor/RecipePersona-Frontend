@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 const initialState = {
   theme: "system",
@@ -17,23 +17,29 @@ export function ThemeProvider({
     () => localStorage.getItem(storageKey) || defaultTheme
   );
 
-  useEffect(() => {
+  const handleThemeChange = useCallback(() => {
     const root = window.document.documentElement;
-
     root.classList.remove("light", "dark");
-
+    const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
     if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-
+      const systemTheme = prefersDarkMode.matches ? "dark" : "light";
       root.classList.add(systemTheme);
       return;
     }
-
     root.classList.add(theme);
   }, [theme]);
+
+  useEffect(() => {
+    handleThemeChange();
+  }, [theme, handleThemeChange]);
+
+  useEffect(() => {
+    const prefersDarkMode = window.matchMedia("(prefers-color-scheme: dark)");
+    prefersDarkMode.addEventListener("change", () => handleThemeChange());
+    return () => {
+      prefersDarkMode.removeEventListener("change", () => handleThemeChange());
+    };
+  }, [handleThemeChange]);
 
   const value = {
     theme,
@@ -49,5 +55,3 @@ export function ThemeProvider({
     </ThemeProviderContext.Provider>
   );
 }
-
-

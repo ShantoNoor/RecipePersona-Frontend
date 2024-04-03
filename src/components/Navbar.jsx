@@ -21,7 +21,7 @@ const Navbar = () => {
 
   const links = [
     { text: "Home", to: "/" },
-    { text: "Recipes", to: "/" },
+    { text: "Recipes", to: "/recipes" },
   ];
 
   return (
@@ -66,6 +66,9 @@ const Navbar = () => {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
+          <span className="text-nowrap text-lg font-semibold md:text-base md:hidden">
+            Recipe Persona
+          </span>
           <SheetContent side="left">
             <nav className="grid gap-6 text-lg font-medium">
               <Link
@@ -73,7 +76,7 @@ const Navbar = () => {
                 className="flex items-center gap-2 text-lg font-semibold"
               >
                 <UtensilsCrossed className="h-6 w-6" />
-                <span className="sr-only">Acme Inc</span>
+                <span className="text-nowrap">Recipe Persona</span>
               </Link>
               {links.map((link, idx) => (
                 <Link key={idx} to={link.to} className="hover:text-foreground">
@@ -89,16 +92,7 @@ const Navbar = () => {
           </SheetContent>
         </Sheet>
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-          <form className="ml-auto flex-1 sm:flex-initial">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search products..."
-                className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-              />
-            </div>
-          </form>
+          <div className="flex-1" />
           <ModeToggle />
           {user && (
             <DropdownMenu>
@@ -124,12 +118,16 @@ const Navbar = () => {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer">
-                  My Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem className="cursor-pointer">
-                  My Recipes
-                </DropdownMenuItem>
+                <Link to="/my-profile">
+                  <DropdownMenuItem className="cursor-pointer">
+                    My Profile
+                  </DropdownMenuItem>
+                </Link>
+                <Link to="/my-recipes">
+                  <DropdownMenuItem className="cursor-pointer">
+                    My Recipes
+                  </DropdownMenuItem>
+                </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="cursor-pointer"

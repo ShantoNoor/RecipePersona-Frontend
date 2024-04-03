@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 const Footer = () => {
   const navigate = useNavigate();
   return (
-    <>
+    <footer className="mb-4">
       <hr className="mb-4" />
       <div className="mx-auto items-center justify-between md:flex">
         <div
@@ -20,7 +20,7 @@ const Footer = () => {
           </p>
         </div>
       </div>
-    </>
+    </footer>
   );
 };
 
