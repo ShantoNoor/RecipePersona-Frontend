@@ -23,28 +23,26 @@ const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
-      (async () => {
-        if (currentUser?.email) {
-          try {
-            const userInfo = await axiosPublic.get(
-              `/users?email=${currentUser?.email}`
-            );
-            setUser(userInfo.data[0]);
-          } catch (err) {
-            console.error(err);
-          }
-        } else {
-          setUser(null);
+    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser?.email) {
+        try {
+          const userInfo = await axiosPublic.get(
+            `/users?email=${currentUser?.email}`
+          );
+          setUser(userInfo.data[0]);
+        } catch (err) {
+          console.error(err);
         }
-        setLoading(false);
-      })();
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
     });
 
     return () => {
       unSubscribe();
     };
-  }, []);
+  }, [setUser, setLoading]);
 
   const googleProvider = new GoogleAuthProvider();
   const githubProvider = new GithubAuthProvider();
@@ -147,7 +145,9 @@ const AuthProvider = ({ children }) => {
             };
             axiosPublic
               .post("/users", data)
-              .then(() => {})
+              .then((res) => {
+                setUser(res.data);
+              })
               .catch(() => {});
             toast.success(`Welcome ${res.user.displayName}!!!`);
           }
