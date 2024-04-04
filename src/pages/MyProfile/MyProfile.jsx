@@ -1,11 +1,18 @@
+import Spinner from "@/components/Spinner";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
-import General from "./General";
-import { useState } from "react";
-import Preferences from "./Preferences";
+import { Suspense } from "react";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
+import { SlashIcon } from "lucide-react";
 
 export default function MyProfile() {
-  const [general, setGeneral] = useState(true);
+  const { pathname } = useLocation();
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
       <div className="space-y-0.5">
@@ -16,22 +23,60 @@ export default function MyProfile() {
       </div>
       <Separator />
       <div className="mx-auto grid w-full  items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
-        <div className="grid gap-4 text-sm text-muted-foreground">
+        <div className="md:grid gap-4 text-sm text-muted-foreground hidden">
           <Link
-            className={general ? "font-semibold text-primary" : ""}
-            onClick={() => setGeneral(true)}
+            to="/my-profile"
+            className={pathname === "/my-profile" ? "text-primary" : ""}
           >
             General
           </Link>
           <Link
-            className={!general ? "font-semibold text-primary" : ""}
-            onClick={() => setGeneral(false)}
+            to="/my-profile/preferences"
+            className={
+              pathname === "/my-profile/preferences" ? "text-primary" : ""
+            }
           >
             Preferences
           </Link>
         </div>
+        <div className="md:hidden">
+          <Breadcrumb className="mb-4">
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbPage className="cursor-pointer">
+                  <Link
+                    to="/my-profile"
+                    className={pathname === "/my-profile" ? "text-primary" : ""}
+                  >
+                    General
+                  </Link>
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator>
+                <SlashIcon />
+              </BreadcrumbSeparator>
+              <BreadcrumbItem>
+                <BreadcrumbPage className="cursor-pointer">
+                  <Link
+                    to="/my-profile/preferences"
+                    className={
+                      pathname === "/my-profile/preferences"
+                        ? "text-primary"
+                        : ""
+                    }
+                  >
+                    Preferences
+                  </Link>
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+          <Separator />
+        </div>
         <div className="grid gap-6">
-          {general ? <General /> : <Preferences />}
+          <Suspense fallback={<Spinner />}>
+            <Outlet />
+          </Suspense>
         </div>
       </div>
     </div>

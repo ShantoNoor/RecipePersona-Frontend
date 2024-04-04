@@ -9,6 +9,8 @@ import { ThemeProvider } from "./components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Spinner from "./components/Spinner";
 import AddRecipe from "./pages/AddRecipe";
+import General from "./pages/MyProfile/General";
+import Preferences from "./pages/MyProfile/Preferences";
 
 const Navbar = React.lazy(() => import("./components/Navbar"));
 const Footer = React.lazy(() => import("./components/Footer"));
@@ -33,14 +35,27 @@ const router = createBrowserRouter([
     ),
     children: [
       { path: "/", element: <Home /> },
-      { path: "/recipes", element: <Recipes /> },
-      { path: "/add-recipe", element: <AddRecipe /> },
-      { path: "/my-recipes", element: <MyRecipes /> },
-      { path: "/my-profile", element: <MyProfile /> },
+      { path: "recipes", element: <Recipes /> },
+      { path: "add-recipe", element: <AddRecipe /> },
+      { path: "my-recipes", element: <MyRecipes /> },
+      {
+        path: "my-profile",
+        element: <MyProfile />,
+        children: [
+          {
+            path: "/my-profile",
+            element: <General />,
+          },
+          {
+            path: "preferences",
+            element: <Preferences />,
+          },
+        ],
+      },
     ],
   },
   {
-    path: "/login",
+    path: "login",
     element: <Login />,
   },
 ]);
