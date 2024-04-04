@@ -17,7 +17,7 @@ const Home = React.lazy(() => import("./pages/Home"));
 
 const Recipes = React.lazy(() => import("./pages/Recipes"));
 const MyRecipes = React.lazy(() => import("./pages/MyRecipes"));
-const MyProfile = React.lazy(() => import("./pages/MyProfile"));
+const MyProfile = React.lazy(() => import("./pages/MyProfile/MyProfile"));
 
 const router = createBrowserRouter([
   {
@@ -59,7 +59,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <RouterProvider router={router} />
         </React.Suspense>
       </AuthProvider>
-      <Toaster position="top-right" closeButton richColors />
+      <Toaster offset={60} position="top-right" closeButton richColors />
     </ThemeProvider>
   </React.StrictMode>
 );

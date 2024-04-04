@@ -108,7 +108,7 @@ const Navbar = () => {
                 >
                   {user ? (
                     <Avatar className="size-9">
-                      <AvatarImage src={user.photo} />
+                      <AvatarImage src={user.photo} className="object-cover" />
                       <AvatarFallback>
                         {user.name[0].toUpperCase()}
                       </AvatarFallback>
@@ -120,7 +120,7 @@ const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>{user.displayName}</DropdownMenuLabel>
+                <DropdownMenuLabel>{user.name}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <Link to="/add-recipe">
                   <DropdownMenuItem className="cursor-pointer">

@@ -142,7 +142,7 @@ const Home = () => {
           {features.map((feature, idx) => (
             <Card
               key={idx}
-              className="min-w-[330px] hover:-translate-y-1 transition-transform duration-300"
+              className="min-w-[325px] hover:-translate-y-1 transition-transform duration-300"
             >
               <CardHeader>
                 <CardTitle className="mx-auto">{feature.icon}</CardTitle>
