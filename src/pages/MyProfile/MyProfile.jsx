@@ -39,11 +39,11 @@ export default function MyProfile() {
             Preferences
           </Link>
         </div>
-        <div className="md:hidden">
-          <Breadcrumb className="mb-4">
+        <div className="md:hidden z-1">
+          <Breadcrumb className="mb-4 cursor-pointer">
             <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbPage className="cursor-pointer">
+              <BreadcrumbItem className="cursor-pointer">
+                <BreadcrumbPage>
                   <Link
                     to="/my-profile"
                     className={pathname === "/my-profile" ? "text-primary" : ""}
@@ -55,8 +55,8 @@ export default function MyProfile() {
               <BreadcrumbSeparator>
                 <SlashIcon />
               </BreadcrumbSeparator>
-              <BreadcrumbItem>
-                <BreadcrumbPage className="cursor-pointer">
+              <BreadcrumbItem className="cursor-pointer">
+                <BreadcrumbPage>
                   <Link
                     to="/my-profile/preferences"
                     className={
