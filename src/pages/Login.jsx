@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Input as InputRaw } from "@/components/ui/input";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -19,6 +19,8 @@ import useAuth from "@/hooks/useAuth";
 import useRedirect from "@/hooks/useRedirect";
 import Image from "@/components/Image";
 import axiosPublic from "@/hooks/useAxios";
+import { cn } from "@/utils/utils";
+import { UtensilsCrossed } from "lucide-react";
 
 const MotionFormLabel = motion(FormLabel);
 const MotionFormDescription = motion(FormDescription);
@@ -80,7 +82,16 @@ export default function Login() {
   return (
     <MotionConfig transition={{ duration: 1, type: "spring", bounce: 0 }}>
       <div className="w-full lg:grid lg:grid-cols-2">
-        <div className="flex items-center justify-center min-h-screen py-12">
+        <div className="flex items-center justify-center min-h-screen py-12 relative">
+          <Link
+            to="/"
+            className={cn(
+              buttonVariants({ variant: "ghost" }),
+              "absolute left-4 top-4 md:left-8 md:top-8"
+            )}
+          >
+            Home
+          </Link>
           <div className="mx-auto grid w-[350px] gap-6">
             <div>
               <motion.div layout className="grid gap-2 text-center mb-4">
@@ -262,6 +273,11 @@ export default function Login() {
           </div>
         </div>
         <div className="hidden bg-muted lg:block">
+          <div className="absolute right-4 top-4 md:right-8 md:top-8 z-20 p-2 flex items-center text-lg font-medium">
+            <UtensilsCrossed className="mr-2"/>
+            RecipePersona
+            <div className="absolute inset-0 bg-zinc-900/75 rounded-[var(--radius)] -z-[1]" />
+          </div>
           <Image
             src="https://data.ipic.ai/images/8lodJaPQi04rGQw_1694737137.png"
             alt="Image"
