@@ -106,7 +106,7 @@ const Home = () => {
             {imgs.map((img, idx) => (
               <CarouselItem
                 key={idx}
-                className="flex basis-1/2 md:basis-1/4 lg:basis-1/6 pl-2 md:pl-4 items-center justify-center p-6 cursor-pointer"
+                className="flex min-w-[350px] md:min-w-auto basis-1/2 md:basis-1/4 lg:basis-1/6 pl-2 md:pl-4 items-center justify-center p-6 cursor-pointer"
               >
                 <div className="border-secondary rounded-[var(--radius)] border overflow-hidden">
                   <div className="overflow-hidden">
@@ -123,8 +123,8 @@ const Home = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="left-4" />
-          <CarouselNext className="right-4" />
+          <CarouselPrevious className="left-1" />
+          <CarouselNext className="right-1" />
         </Carousel>
       </div>
 
@@ -140,7 +140,10 @@ const Home = () => {
 
         <div className="flex gap-4 flex-wrap justify-center">
           {features.map((feature, idx) => (
-            <Card key={idx} className="w-[330px]">
+            <Card
+              key={idx}
+              className="min-w-[330px] hover:-translate-y-1 transition-transform duration-300"
+            >
               <CardHeader>
                 <CardTitle className="mx-auto">{feature.icon}</CardTitle>
               </CardHeader>
