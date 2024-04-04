@@ -18,6 +18,7 @@ import {
 import useAuth from "@/hooks/useAuth";
 import useRedirect from "@/hooks/useRedirect";
 import Image from "@/components/Image";
+import axiosPublic from "@/hooks/useAxios";
 
 const MotionFormLabel = motion(FormLabel);
 const MotionFormDescription = motion(FormDescription);
@@ -64,7 +65,12 @@ export default function Login() {
     } else {
       // sign-up
       const res = await signUp(data.email, data.password);
-      if (res?.email) await updateProfile(data.name, "");
+      if (res?.email) {
+        await Promise.all([
+          updateProfile(data.name, ""),
+          axiosPublic.post("/users", data),
+        ]);
+      }
     }
 
     form.reset();

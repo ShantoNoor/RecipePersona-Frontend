@@ -13,6 +13,7 @@ import {
 } from "firebase/auth";
 
 import { toast } from "sonner";
+import axiosPublic from "@/hooks/useAxios";
 
 const auth = getAuth(app);
 export const AuthContext = createContext(null);
@@ -24,21 +25,18 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       (async () => {
-        // if (currentUser?.email) {
-        //   try {
-        //     const userInfo = await axiosn.get(
-        //       `/users?email=${currentUser?.email}`
-        //     );
-        //     setUser(userInfo.data[0]);
-        //   } catch (err) {
-        //     console.error(err);
-        //   }
-        // } else {
-        //   setUser(null);
-        // }
-
-        setUser(currentUser);
-        console.log(currentUser);
+        if (currentUser?.email) {
+          try {
+            const userInfo = await axiosPublic.get(
+              `/users?email=${currentUser?.email}`
+            );
+            setUser(userInfo.data[0]);
+          } catch (err) {
+            console.error(err);
+          }
+        } else {
+          setUser(null);
+        }
         setLoading(false);
       })();
     });
@@ -141,8 +139,18 @@ const AuthProvider = ({ children }) => {
         loading: "Loading, Please wait ...",
         success: (res) => {
           resolve(res.user);
-          if (res.user?.displayName)
+          if (res.user?.email) {
+            const data = {
+              name: res.user?.displayName || "",
+              email: res.user.email,
+              photo: res.user?.photoURL || "",
+            };
+            axiosPublic
+              .post("/users", data)
+              .then(() => {})
+              .catch(() => {});
             toast.success(`Welcome ${res.user.displayName}!!!`);
+          }
           return "Login Successfull!";
         },
         error: (err) => {

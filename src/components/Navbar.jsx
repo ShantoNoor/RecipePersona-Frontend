@@ -107,14 +107,14 @@ const Navbar = () => {
                   className="rounded-full"
                 >
                   {user ? (
-                    <>
-                      <Avatar>
-                        <AvatarImage src={user.photoURL} />
-                        <AvatarFallback>{user.displayName[0]}</AvatarFallback>
-                      </Avatar>
-                    </>
+                    <Avatar className="size-9">
+                      <AvatarImage src={user.photo} />
+                      <AvatarFallback>
+                        {user.name[0].toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
                   ) : (
-                    <CircleUser className="h-5 w-5" />
+                    <CircleUser className="size-5" />
                   )}
                   <span className="sr-only">Toggle user menu</span>
                 </Button>
