@@ -26,6 +26,8 @@ import {
   Star,
 } from "lucide-react";
 
+import { motion } from "framer-motion";
+
 const imgs = [
   "https://www.themealdb.com/images/media/meals/xrysxr1483568462.jpg",
   "https://www.themealdb.com/images/media/meals/t8mn9g1560460231.jpg",
@@ -67,22 +69,43 @@ const features = [
 const Home = () => {
   return (
     <>
-      <PageHeader>
-        <PageHeaderHeading>RecipePersona</PageHeaderHeading>
-        <PageHeaderDescription>
-          Your Personalized Recipe Guide. Discover delicious recipes, get recipe
-          recommendations based on your preferences.
-        </PageHeaderDescription>
-        <PageHeaderDescription>
-          Find it. Make it. Share it.
-        </PageHeaderDescription>
-        <PageActions>
-          <Button>View Recipes</Button>
-          <Button variant="outline">Get Recommendations</Button>
-        </PageActions>
-      </PageHeader>
+      <div className="bg-[url(https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/10/14/FN_ingredient-substitutions_s4x3.jpg.rend.hgtvcom.1280.720.suffix/1634257696464.jpeg)] bg-no-repeat bg-cover bg-center md:p-10 rounded-xl">
+        <PageHeader className="relative">
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 0.75, height: "auto" }}
+            className="bg-gradient-to-r from-pink-500 to-yellow-500 rounded-xl absolute inset-0 md:inset-4 lg:inset-12"
+          />
+          <motion.div
+            initial={{ opacity: 0, y: -100 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: {
+                staggerChildren: 0.5,
+              },
+            }}
+            className="z-[1] flex flex-col gap-1 items-center justify-center"
+          >
+            <PageHeaderHeading className="text-white">
+              RecipePersona
+            </PageHeaderHeading>
+            <PageHeaderDescription className="text-zinc-100">
+              Your Personalized Recipe Guide. Discover delicious recipes, get
+              recipe recommendations based on your preferences.
+            </PageHeaderDescription>
+            <PageHeaderDescription className="text-zinc-100">
+              Find it. Make it. Share it.
+            </PageHeaderDescription>
+            <PageActions className="flex flex-col md:flex-row gap-1 items-center justify-center">
+              <Button>View Recipes</Button>
+              <Button variant="outline">Get Recommendations</Button>
+            </PageActions>
+          </motion.div>
+        </PageHeader>
+      </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 mt-8">
         <div>
           <h1 className="text-3xl font-semibold">Popular Recipes</h1>
           {/* <p  <h3 className="text-lg font-medium">
