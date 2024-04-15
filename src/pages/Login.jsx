@@ -273,7 +273,7 @@ export default function Login() {
           </div>
         </div>
         <div className="hidden bg-muted lg:block">
-          <div className="absolute right-4 top-4 md:right-8 md:top-8 z-20 p-2 flex items-center text-lg font-medium">
+          <div className="absolute text-white right-4 top-4 md:right-8 md:top-8 z-20 p-2 flex items-center text-lg font-medium">
             <UtensilsCrossed className="mr-2"/>
             RecipePersona
             <div className="absolute inset-0 bg-zinc-900/75 rounded-[var(--radius)] -z-[1]" />

@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { ModeToggle } from "./ui/mode-toggle";
-import { NavLink, Link } from "react-router-dom";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import useAuth from "@/hooks/useAuth";
 
@@ -39,6 +39,7 @@ const NLink = ({ children, className, ...props }) => (
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const links = [
     { text: "Home", to: "/" },
@@ -140,7 +141,10 @@ const Navbar = () => {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   className="cursor-pointer"
-                  onClick={async () => await signOut()}
+                  onClick={async () => {
+                    await signOut();
+                    navigate("/");
+                  }}
                 >
                   Logout
                 </DropdownMenuItem>
