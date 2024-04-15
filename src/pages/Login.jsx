@@ -21,6 +21,7 @@ import Image from "@/components/Image";
 import axiosPublic from "@/hooks/useAxios";
 import { cn } from "@/utils/utils";
 import { UtensilsCrossed } from "lucide-react";
+import PasswordInput from "@/components/PasswordInput";
 
 const variants = {
   initial: { opacity: 0, y: -30, height: 0 },
@@ -31,7 +32,7 @@ const variants = {
 export default function Login() {
   const [signup, setSignup] = useState(false);
 
-  const { googlePopUp, signUp, signIn, updateProfile } = useAuth();
+  const { googlePopUp, signUp, signIn, updateProfile, setUser } = useAuth();
 
   const redirect = useRedirect();
 
@@ -86,10 +87,12 @@ export default function Login() {
       }
       const res = await signUp(data.email, data.password);
       if (res?.email) {
-        await Promise.all([
+        const results = await Promise.all([
           updateProfile(data.name, ""),
           axiosPublic.post("/users", data),
         ]);
+
+        setUser(results[1].data)
       }
     }
 
@@ -207,11 +210,7 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>Password</FormLabel>
                         <FormControl>
-                          <Input
-                            type="password"
-                            placeholder="password"
-                            {...field}
-                          />
+                          <PasswordInput placeholder="password" {...field} />
                         </FormControl>
                         <FormDescription>Type your password</FormDescription>
                         <FormMessage />
@@ -235,9 +234,8 @@ export default function Login() {
                           <FormItem>
                             <FormLabel>Confirm Password</FormLabel>
                             <FormControl>
-                              <Input
+                              <PasswordInput
                                 placeholder="confirm password"
-                                type="text"
                                 {...field}
                               />
                             </FormControl>

@@ -64,8 +64,7 @@ const General = () => {
 
     toast.promise(axiosPublic.put(`/users/${user._id}`, updateFields), {
       loading: "Loading, Please wait ...",
-      success: (res) => {
-        console.log(res);
+      success: () => {
         setUser({
           ...user,
           name: updateFields.name,
