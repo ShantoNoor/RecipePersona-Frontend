@@ -66,23 +66,31 @@ const features = [
   },
 ];
 
+const MotionCard = motion(Card);
+
 const Home = () => {
   return (
     <>
-      <div className="bg-[url(https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/10/14/FN_ingredient-substitutions_s4x3.jpg.rend.hgtvcom.1280.720.suffix/1634257696464.jpeg)] bg-no-repeat bg-cover bg-center md:p-10 rounded-xl">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="bg-[url(https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/10/14/FN_ingredient-substitutions_s4x3.jpg.rend.hgtvcom.1280.720.suffix/1634257696464.jpeg)] bg-no-repeat bg-cover bg-center md:p-10 rounded-xl"
+      >
         <PageHeader className="relative">
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 0.75, height: "auto" }}
-            className="bg-gradient-to-r from-pink-500 to-yellow-500 rounded-xl absolute inset-0 md:inset-4 lg:inset-12"
+            whileHover={{}}
+            className="bg-gradient-to-r from-orange-500 to-rose-500 rounded-xl absolute inset-0 md:inset-4 lg:inset-12"
           />
           <motion.div
-            initial={{ opacity: 0, y: -100 }}
+            initial={{ opacity: 0, y: -50 }}
             animate={{
               opacity: 1,
               y: 0,
               transition: {
-                staggerChildren: 0.5,
+                duration: 1,
               },
             }}
             className="z-[1] flex flex-col gap-1 items-center justify-center"
@@ -103,9 +111,14 @@ const Home = () => {
             </PageActions>
           </motion.div>
         </PageHeader>
-      </div>
+      </motion.div>
 
-      <div className="space-y-4 mt-8">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="space-y-4 my-8"
+      >
         <div>
           <h1 className="text-3xl font-semibold">Popular Recipes</h1>
           {/* <p  <h3 className="text-lg font-medium">
@@ -149,9 +162,15 @@ const Home = () => {
           <CarouselPrevious className="left-1" />
           <CarouselNext className="right-1" />
         </Carousel>
-      </div>
+      </motion.div>
 
-      <div className="space-y-4">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        viewport={{ once: true }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1 }}
+        className="space-y-4"
+      >
         <div>
           <h1 className="text-3xl font-semibold">Our Features</h1>
           {/* <p  <h3 className="text-lg font-medium">
@@ -163,9 +182,24 @@ const Home = () => {
 
         <div className="flex gap-4 flex-wrap justify-center">
           {features.map((feature, idx) => (
-            <Card
+            <MotionCard
               key={idx}
-              className="min-w-[325px] hover:-translate-y-1 transition-transform duration-300"
+              initial={{ opacity: 0, y: 30 }}
+              viewport={{ once: true }}
+              whileInView={{
+                opacity: 1,
+                y: 0,
+                transition: {
+                  delay: 0.2 * idx,
+                },
+              }}
+              whileHover={{
+                translateY: -10,
+              }}
+              whileTap={{
+                translateY: -5,
+              }}
+              className="min-w-[325px] shadow-none hover:shadow-md hover:shadow-accent"
             >
               <CardHeader>
                 <CardTitle className="mx-auto">{feature.icon}</CardTitle>
@@ -174,10 +208,10 @@ const Home = () => {
                 <CheckCheckIcon className="size-5" />
                 <p>{feature.text}</p>
               </CardContent>
-            </Card>
+            </MotionCard>
           ))}
         </div>
-      </div>
+      </motion.div>
     </>
   );
 };
