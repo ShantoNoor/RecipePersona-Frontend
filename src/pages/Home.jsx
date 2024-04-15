@@ -75,23 +75,22 @@ const Home = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="bg-[url(https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/10/14/FN_ingredient-substitutions_s4x3.jpg.rend.hgtvcom.1280.720.suffix/1634257696464.jpeg)] bg-no-repeat bg-cover bg-center md:p-10 rounded-xl"
+        className="bg-[url(https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/10/14/FN_ingredient-substitutions_s4x3.jpg.rend.hgtvcom.1280.720.suffix/1634257696464.jpeg)] bg-no-repeat bg-cover bg-center md:p-10 rounded-lg"
       >
         <PageHeader className="relative">
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 0.75, height: "auto" }}
-            whileHover={{}}
-            className="bg-gradient-to-r from-orange-500 to-rose-500 rounded-xl absolute inset-0 md:inset-4 lg:inset-12"
+            className="bg-gradient-to-r from-orange-500 to-rose-500 rounded-lg absolute inset-0 md:inset-4 lg:inset-12"
           />
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{
               opacity: 1,
               y: 0,
-              transition: {
-                duration: 1,
-              },
+            }}
+            transition={{
+              duration: 1,
             }}
             className="z-[1] flex flex-col gap-1 items-center justify-center"
           >
@@ -119,14 +118,9 @@ const Home = () => {
         transition={{ duration: 1 }}
         className="space-y-4 my-8"
       >
-        <div>
-          <h1 className="text-3xl font-semibold">Popular Recipes</h1>
-          {/* <p  <h3 className="text-lg font-medium">
-            This are the most loved Recipes.
-          </h3>
-         className="text-sm text-muted-foreground">Popular Recipes</p> */}
-        </div>
+        <h1 className="text-3xl font-semibold">Popular Recipes</h1>
         <Separator />
+
         <Carousel
           opts={{
             align: "center",
@@ -144,7 +138,7 @@ const Home = () => {
                 key={idx}
                 className="flex min-w-[350px] md:min-w-auto basis-1/2 md:basis-1/4 lg:basis-1/6 pl-2 md:pl-4 items-center justify-center p-6 cursor-pointer"
               >
-                <div className="border-secondary rounded-[var(--radius)] border overflow-hidden">
+                <div className="border-secondary rounded-lg overflow-hidden border">
                   <div className="overflow-hidden">
                     <Image
                       src={img}
@@ -171,13 +165,7 @@ const Home = () => {
         transition={{ duration: 1 }}
         className="space-y-4"
       >
-        <div>
-          <h1 className="text-3xl font-semibold">Our Features</h1>
-          {/* <p  <h3 className="text-lg font-medium">
-            This are the most loved Recipes.
-          </h3>
-         className="text-sm text-muted-foreground">Popular Recipes</p> */}
-        </div>
+        <h1 className="text-3xl font-semibold">Our Features</h1>
         <Separator />
 
         <div className="flex gap-4 flex-wrap justify-center">
@@ -199,7 +187,7 @@ const Home = () => {
               whileTap={{
                 translateY: -5,
               }}
-              className="min-w-[325px] shadow-none hover:shadow-md hover:shadow-accent"
+              className="min-w-[300px] md:min-w-[325px] shadow-none hover:shadow-md hover:shadow-accent"
             >
               <CardHeader>
                 <CardTitle className="mx-auto">{feature.icon}</CardTitle>
