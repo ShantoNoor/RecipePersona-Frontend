@@ -1,9 +1,11 @@
 const MyRecipes = () => {
   return (
     <>
-      <div>MyRecipes</div>
+      <div>
+        MyRecipes
+      </div>
     </>
-  );
-};
+  )
+}
 
-export default MyRecipes;
+export default MyRecipes

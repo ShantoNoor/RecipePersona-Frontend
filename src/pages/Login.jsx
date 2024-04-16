@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import {
   Form,
   FormControl,
@@ -22,6 +21,8 @@ import axiosPublic from "@/hooks/useAxios";
 import { cn } from "@/utils/utils";
 import { UtensilsCrossed } from "lucide-react";
 import PasswordInput from "@/components/PasswordInput";
+import { loginSchema } from "@/schemas/login.schema";
+import { signupSchema } from "@/schemas/signup.schema";
 
 const variants = {
   initial: { opacity: 0, y: -30, height: 0 },
@@ -36,55 +37,17 @@ export default function Login() {
 
   const redirect = useRedirect();
 
-  const formSchema = z.object({
-    name: z
-      .string()
-      .trim()
-      .min(1, "This field is required")
-      .min(3, "Name must be at least 3 characters long"),
-    email: z.string().email({ message: "Enter a valid email address." }),
-    password: z
-      .string()
-      .trim()
-      .min(6, "Password must be at least 6 characters long")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>])[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]+$/,
-        {
-          message:
-            "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
-        }
-      ),
-    confirm_password: z
-      .string()
-      .trim()
-      .min(6, "Password must be at least 6 characters long")
-      .regex(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()\-_=+{};:,<.>])[A-Za-z\d!@#$%^&*()\-_=+{};:,<.>]+$/,
-        {
-          message:
-            "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.",
-        }
-      ),
-  });
-
   const form = useForm({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(signup ? signupSchema : loginSchema),
     defaultValues: { email: "", password: "", name: "", confirm_password: "" },
   });
 
   const onSubmit = async (data) => {
-    if (data.confirm_password === "12qw!@QW" && !signup) {
+    if (!signup) {
       //login
       await signIn(data.email, data.password);
     } else {
       // sign-up
-      if (data.confirm_password !== data.password) {
-        form.setError("confirm_password", {
-          type: "custom",
-          message: "Password doesn't match.",
-        });
-        return;
-      }
       const res = await signUp(data.email, data.password);
       if (res?.email) {
         const results = await Promise.all([
@@ -92,7 +55,7 @@ export default function Login() {
           axiosPublic.post("/users", data),
         ]);
 
-        setUser(results[1].data)
+        setUser(results[1].data);
       }
     }
 
@@ -251,10 +214,6 @@ export default function Login() {
                 </AnimatePresence>
                 <Button
                   onClick={() => {
-                    if (!signup) {
-                      form.setValue("name", "aaaa");
-                      form.setValue("confirm_password", "12qw!@QW");
-                    }
                     form.handleSubmit(onSubmit);
                   }}
                   className="w-full"
