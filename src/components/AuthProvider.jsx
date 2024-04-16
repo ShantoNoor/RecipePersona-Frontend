@@ -136,7 +136,6 @@ const AuthProvider = ({ children }) => {
       toast.promise(popUpSignIn(media), {
         loading: "Loading, Please wait ...",
         success: (res) => {
-          resolve(res.user);
           if (res.user?.email) {
             const data = {
               name: res.user?.displayName || "",
@@ -147,15 +146,20 @@ const AuthProvider = ({ children }) => {
               .post("/users", data)
               .then((res) => {
                 setUser(res.data);
+                resolve(res.data);
+                toast.success(`Welcome ${res.data.name}!!!`);
               })
-              .catch(() => {});
-            toast.success(`Welcome ${res.user.displayName}!!!`);
+              .catch((err) => {
+                toast.error("Something went wrong");
+                toast.error(err.message);
+              });
           }
           return "Login Successfull!";
         },
         error: (err) => {
           reject(null);
           toast.error("Failed To Login");
+          setLoading(false);
           return err.message;
         },
       });
