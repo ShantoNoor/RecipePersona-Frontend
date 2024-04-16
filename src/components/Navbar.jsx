@@ -128,14 +128,19 @@ const Navbar = () => {
                     Add Recipe
                   </DropdownMenuItem>
                 </Link>
+                <Link to="/my-recipes">
+                  <DropdownMenuItem className="cursor-pointer">
+                    My Recipes
+                  </DropdownMenuItem>
+                </Link>
                 <Link to="/my-profile">
                   <DropdownMenuItem className="cursor-pointer">
                     My Profile
                   </DropdownMenuItem>
                 </Link>
-                <Link to="/my-recipes">
+                <Link to="/my-profile/preferences">
                   <DropdownMenuItem className="cursor-pointer">
-                    My Recipes
+                    My Preferences
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuSeparator />
