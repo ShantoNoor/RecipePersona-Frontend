@@ -92,10 +92,7 @@ const General = () => {
                 <FormControl>
                   <Input placeholder="Your name" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is the name that will be displayed on your profile and in
-                  emails.
-                </FormDescription>
+                <FormDescription>Change your name here</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -110,7 +107,7 @@ const General = () => {
                 <FormControl>
                   <Input disabled {...field} />
                 </FormControl>
-                <FormDescription>This is your email.</FormDescription>
+                <FormDescription>Your email</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
