@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,25 +18,13 @@ import useAuth from "@/hooks/useAuth";
 import { useEffect } from "react";
 import photoUploader from "@/utils/photoUploader";
 import axiosPublic from "@/hooks/useAxios";
-
-const accountFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, {
-      message: "Name must be at least 2 characters.",
-    })
-    .max(30, {
-      message: "Name must not be longer than 30 characters.",
-    }),
-  email: z.string(),
-  photo: z.any(),
-});
+import { userGeneralSchema } from "@/schemas/userGeneral.schema";
 
 const General = () => {
   const { user, setUser } = useAuth();
 
   const form = useForm({
-    resolver: zodResolver(accountFormSchema),
+    resolver: zodResolver(userGeneralSchema),
     defaultValues: {
       name: "",
       photo: "",
