@@ -19,6 +19,7 @@ import { useEffect } from "react";
 import photoUploader from "@/utils/photoUploader";
 import axiosPublic from "@/hooks/useAxios";
 import { userGeneralSchema } from "@/schemas/userGeneral.schema";
+import { User2Icon } from "lucide-react";
 
 const General = () => {
   const { user, setUser } = useAuth();
@@ -81,7 +82,11 @@ const General = () => {
               <FormItem>
                 <FormLabel>Change Your Profile Picture</FormLabel>
                 <FormControl>
-                  <AvatarUpload value={field.value} onChange={field.onChange} />
+                  <AvatarUpload
+                    value={field.value}
+                    onChange={field.onChange}
+                    icon={<User2Icon className="w-16 h-16" />}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import AvatarUpload from "@/components/AvatarUpload";
 import useAuth from "@/hooks/useAuth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import photoUploader from "@/utils/photoUploader";
 import axiosPublic from "@/hooks/useAxios";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,8 +24,15 @@ import {
   PageHeaderDescription,
   PageHeaderHeading,
 } from "@/components/ui/page-header";
-import { motion } from "framer-motion";
-import { ArrowLeft, ArrowRight, Check, ChevronsUpDown } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Camera,
+  Check,
+  ChevronsUpDown,
+  PlusCircle,
+} from "lucide-react";
 import FormHeading from "./FormHeading";
 import { recipeSchema } from "@/schemas/recipe.schema";
 import {
@@ -55,23 +62,57 @@ import { Slider } from "@/components/ui/slider";
 import minutesToHoursAndMinutes from "@/utils/minutesToHoursAndMinutes";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Checkbox } from "@/components/ui/checkbox";
+
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+const allergicIngredients = [
+  {
+    id: "milk",
+    label: "Milk (Dairy Productucs)",
+  },
+  {
+    id: "egg",
+    label: "Egg",
+  },
+  {
+    id: "peanut",
+    label: "Peanut",
+  },
+  {
+    id: "meat",
+    label: "Meat",
+  },
+];
+
 const steps = [
   {
     id: "Step 1",
     name: "General Information",
     details: "Please, provide informations about your recipe",
-    fields: ["cuisine", "category", "cookTime"],
+    fields: ["name", "image", "cuisine", "category", "cookTime"],
   },
   {
     id: "Step 2",
     name: "Write Recipe",
     details: "Please, write your recipe in details",
-    fields: ["country", "state", "city", "street", "zip"],
+    fields: ["instructions", "ingredients"],
   },
   {
     id: "Step 3",
     name: "Answer Questions",
     details: "Please, answer the following questions carefully.",
+    fields: ["allergicIngredients", "video"],
   },
   {
     id: "Step 4",
@@ -84,19 +125,48 @@ const AddRecipe = () => {
   const { user } = useAuth();
 
   const [previousStep, setPreviousStep] = useState(0);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [currentStep, setCurrentStep] = useState(2);
   const delta = currentStep - previousStep;
 
   const [openCategories, setOpenCategories] = useState(false);
+  const [haveVideo, setHaveVideo] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(recipeSchema),
     defaultValues: {
+      name: "",
       cookTime: 5,
+      ingredients: [
+        {
+          name: "",
+          measure: "",
+        },
+        {
+          name: "",
+          measure: "",
+        },
+        {
+          name: "",
+          measure: "",
+        },
+      ],
+      allergicIngredients: [],
+      video: "",
     },
   });
 
-  const { handleSubmit, reset, trigger, watch, setValue } = form;
+  const { handleSubmit, reset, trigger, watch, setValue, control } = form;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "ingredients",
+  });
+
+  useEffect(() => {
+    if (user) {
+      form.setValue("author", user?.id);
+    }
+  }, [user, form]);
 
   const processForm = (data) => {
     console.log(data);
@@ -228,139 +298,184 @@ const AddRecipe = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <FormHeading step={steps[currentStep]} />
-
-              <div className="mt-6 space-y-6">
-                <FormField
-                  control={form.control}
-                  name="cuisine"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        What kind of recipe you would like to add?
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="relative">
+                  <FormField
+                    control={form.control}
+                    name="image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Upload Your {`Recipe's`} Image</FormLabel>
                         <FormControl>
-                          <SelectTrigger className="capitalize">
-                            <SelectValue placeholder="Select a cuisine" />
-                          </SelectTrigger>
+                          <AvatarUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            rounded={false}
+                            icon={<Camera className="size-16" />}
+                          />
                         </FormControl>
-                        <SelectContent>
-                          {cuisines.map((cuisine) => (
-                            <SelectItem
-                              key={cuisine}
-                              value={cuisine}
-                              className="capitalize"
-                            >
-                              {cuisine}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Separator
+                    className="absolute left-[85%] top-0 hidden md:block"
+                    orientation="vertical"
+                  />
+                </div>
 
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <FormLabel>
-                        What category the recipe belongs to?
-                      </FormLabel>
-                      <Popover
-                        open={openCategories}
-                        onOpenChange={setOpenCategories}
-                      >
-                        <PopoverTrigger asChild>
+                <div className="space-y-6 md:col-span-2">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Name of Your Recipe</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            placeholder="Your Recipe's Name"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="cuisine"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          What kind of recipe you would like to add?
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
                           <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-full justify-between capitalize",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value
-                                ? categories.find(
-                                    (categorie) =>
-                                      categorie.name === field.value
-                                  )?.name
-                                : "Select a category"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
+                            <SelectTrigger className="capitalize">
+                              <SelectValue placeholder="Select a cuisine" />
+                            </SelectTrigger>
                           </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="Search category..." />
-                            <CommandEmpty>No language found.</CommandEmpty>
-                            <CommandGroup>
-                              <ScrollArea className="h-72 w-full rounded-md border">
-                                {categories.map((categorie) => (
-                                  <CommandItem
-                                    value={categorie.name}
-                                    key={categorie.name}
-                                    onSelect={() => {
-                                      form.setValue("category", categorie.name);
-                                      setOpenCategories(false);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        categorie.name === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      )}
-                                    />
-                                    {categorie.name}
-                                  </CommandItem>
-                                ))}
-                              </ScrollArea>
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                          <SelectContent>
+                            {cuisines.map((cuisine) => (
+                              <SelectItem
+                                key={cuisine}
+                                value={cuisine}
+                                className="capitalize"
+                              >
+                                {cuisine}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="cookTime"
-                  render={({ fields }) => (
-                    <FormItem>
-                      <FormLabel>
-                        How long does it take to perpare the recipe?
-                      </FormLabel>
-                      <FormControl>
-                        <Slider
-                          min={1}
-                          max={1000}
-                          step={1}
-                          {...fields}
-                          value={[watch("cookTime")]}
-                          onValueChange={(value) =>
-                            setValue("cookTime", value[0])
-                          }
-                          className="w-full"
-                        />
-                      </FormControl>
-                      <FormDescription>
-                        Use the slider adjust time:{" "}
-                        {minutesToHoursAndMinutes(watch("cookTime"))}
-                      </FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem className="">
+                        <FormLabel>
+                          What category the recipe belongs to?
+                        </FormLabel>
+                        <Popover
+                          open={openCategories}
+                          onOpenChange={setOpenCategories}
+                        >
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className={cn(
+                                  "w-full justify-between capitalize",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value
+                                  ? categories.find(
+                                      (categorie) =>
+                                        categorie.name === field.value
+                                    )?.name
+                                  : "Select a category"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-full p-0">
+                            <Command>
+                              <CommandInput placeholder="Search category..." />
+                              <CommandEmpty>No language found.</CommandEmpty>
+                              <CommandGroup>
+                                <ScrollArea className="h-72 w-full rounded-md border">
+                                  {categories.map((categorie) => (
+                                    <CommandItem
+                                      value={categorie.name}
+                                      key={categorie.name}
+                                      onSelect={() => {
+                                        form.setValue(
+                                          "category",
+                                          categorie.name
+                                        );
+                                        setOpenCategories(false);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          categorie.name === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {categorie.name}
+                                    </CommandItem>
+                                  ))}
+                                </ScrollArea>
+                              </CommandGroup>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="cookTime"
+                    render={({ fields }) => (
+                      <FormItem>
+                        <FormLabel>
+                          How long does it take to perpare the recipe?
+                        </FormLabel>
+                        <FormControl>
+                          <Slider
+                            min={1}
+                            max={200}
+                            step={1}
+                            {...fields}
+                            value={[watch("cookTime")]}
+                            onValueChange={(value) =>
+                              setValue("cookTime", value[0])
+                            }
+                            className="w-full"
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Use the slider adjust time:{" "}
+                          {minutesToHoursAndMinutes(watch("cookTime"))}
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </motion.div>
           )}
@@ -372,6 +487,100 @@ const AddRecipe = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <FormHeading step={steps[currentStep]} />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="">
+                  <FormField
+                    control={form.control}
+                    name="instructions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Instructions</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Write how to perpare the recipe ... "
+                            rows={40}
+                            className="rounded-xl"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div>
+                  <FormItem>Ingredients</FormItem>
+                  <div className="space-y-4 mt-2">
+                    {fields.map((field, idx) => {
+                      return (
+                        <Card key={field.id} className="w-full">
+                          <CardHeader className="relative">
+                            <CardTitle>Ingredient</CardTitle>
+                            <CardDescription>
+                              Select the Name and Measure
+                            </CardDescription>
+                            <Button
+                              className="absolute right-6 top-5"
+                              variant="ghost"
+                              onClick={() => remove(idx)}
+                            >
+                              Cancel
+                            </Button>
+                          </CardHeader>
+                          <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                            <FormField
+                              control={form.control}
+                              name={`ingredients.${idx}.name`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Name</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder="ingredient's name .."
+                                      type="text"
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+
+                            <FormField
+                              control={form.control}
+                              name={`ingredients.${idx}.measure`}
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>Measure</FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder="ingredient's measure .."
+                                      type="text"
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </CardContent>
+                        </Card>
+                      );
+                    })}
+                  </div>
+                  <Button
+                    onClick={() => append({ name: "", measure: "" })}
+                    type="button"
+                    size="sm"
+                    className="flex mx-auto mt-4 gap-4"
+                  >
+                    <PlusCircle className="size-4" />{" "}
+                    <span>Add More Ingredient</span>
+                  </Button>
+                </div>
+              </div>
             </motion.div>
           )}
 
@@ -382,6 +591,120 @@ const AddRecipe = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <FormHeading step={steps[currentStep]} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <FormField
+                    control={form.control}
+                    name="allergicIngredients"
+                    render={() => (
+                      <FormItem>
+                        <div className="mb-4">
+                          <FormLabel className="text-base">
+                            Are there any of the following ingredients in your
+                            recipe?
+                          </FormLabel>
+                          <FormDescription>
+                            Select carefully, many people are allergic to some
+                            of this ingredients.
+                          </FormDescription>
+                          <FormDescription>
+                            No need to select if {`don't`}
+                          </FormDescription>
+                        </div>
+                        {allergicIngredients.map((item) => (
+                          <FormField
+                            key={item.id}
+                            control={form.control}
+                            name="allergicIngredients"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={item.id}
+                                  className="flex flex-row items-start space-x-3 space-y-0"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(item.id)}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              item.id,
+                                            ])
+                                          : field.onChange(
+                                              field.value.filter(
+                                                (value) => value !== item.id
+                                              )
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="font-normal">
+                                    {item.label}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="space-y-6">
+                  <FormItem>
+                    <FormLabel>
+                      Do you have a video about preparing this recipe?
+                    </FormLabel>
+                    <RadioGroup
+                      value={haveVideo}
+                      onValueChange={(value) => {
+                        setHaveVideo(value);
+                        form.setValue("video", "");
+                      }}
+                    >
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value={false} id="option-one" />
+                        <Label htmlFor="option-one">No</Label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value={true} id="option-two" />
+                        <Label htmlFor="option-two">Yes</Label>
+                      </div>
+                    </RadioGroup>
+                  </FormItem>
+
+                  <AnimatePresence>
+                    {haveVideo && (
+                      <motion.div
+                        initial={{ opacity: 0, x: 200 }}
+                        exit={{ opacity: 0, x: 200 }}
+                        animate={{ opacity: 1, x: 0 }}
+                      >
+                        <FormField
+                          control={form.control}
+                          name="video"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>VideoURL</FormLabel>
+                              <FormControl>
+                                <Input
+                                  type="text"
+                                  className=" w-96"
+                                  placeholder="Please, provide your video url ..."
+                                  {...field}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
             </motion.div>
           )}
 

@@ -1,10 +1,16 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { PencilIcon, User2Icon } from "lucide-react";
+import { cn } from "@/utils/utils";
+import { PencilIcon } from "lucide-react";
 import React, { useState } from "react";
 
-export default function AvatarUpload({ value, onChange }) {
+export default function AvatarUpload({
+  value,
+  onChange,
+  icon,
+  rounded = "true",
+}) {
   const [photo, setPhoto] = useState(null);
   const inputRef = React.useRef(null);
 
@@ -18,10 +24,10 @@ export default function AvatarUpload({ value, onChange }) {
 
   return (
     <div className="relative w-40 h-40">
-      <Avatar className="w-full h-full">
+      <Avatar className={cn("w-full h-full", !rounded && "rounded-none")}>
         <AvatarImage src={!photo ? value : photo} className="object-cover" />
-        <AvatarFallback className="bg-accent">
-          <User2Icon className="w-16 h-16" />
+        <AvatarFallback className={cn("bg-accent", !rounded && "rounded-none")}>
+          {icon}
         </AvatarFallback>
       </Avatar>
       <Button

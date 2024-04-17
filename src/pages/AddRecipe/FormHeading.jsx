@@ -1,6 +1,6 @@
 const FormHeading = ({ step }) => {
   return (
-    <div>
+    <div className="mb-6">
       <h2 className="text-base font-semibold leading-7 text-foreground">
         {step.name}
       </h2>

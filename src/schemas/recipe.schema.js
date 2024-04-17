@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 export const recipeSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3),
   category: z.string(),
-  image: z.string(),
+  image: z.any(),
   cuisine: z.string(),
   video: z.string().optional(),
   cookTime: z.number(),
   author: z.string(),
 
-  instructions: z.string(),
+  instructions: z.string().min(10),
 
   ingredients: z.array(
     z.object({
@@ -18,8 +18,5 @@ export const recipeSchema = z.object({
     })
   ),
 
-  dairyProductucs: z.boolean(),
-  eggs: z.boolean(),
-  meats: z.boolean(),
-  peanuts: z.boolean(),
+  allergicIngredients: z.array(z.string()),
 });
