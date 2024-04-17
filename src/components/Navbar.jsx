@@ -75,9 +75,9 @@ const Navbar = () => {
               <span className="sr-only">Toggle navigation menu</span>
             </Button>
           </SheetTrigger>
-          <span className="text-nowrap text-lg font-semibold md:text-base md:hidden">
+          {/* <span className="text-nowrap text-lg font-semibold md:text-base md:hidden">
             Recipe Persona
-          </span>
+          </span> */}
           <SheetContent side="left">
             <nav className="grid gap-6 text-lg font-medium">
               <Link

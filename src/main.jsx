@@ -8,18 +8,19 @@ import AuthProvider from "./components/AuthProvider";
 import { ThemeProvider } from "./components/ui/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import Spinner from "./components/Spinner";
-import AddRecipe from "./pages/AddRecipe";
+
 import General from "./pages/MyProfile/General";
 import Preferences from "./pages/MyProfile/Preferences";
-
+import TestForm from "./pages/AddRecipe/TestForm";
 const Navbar = React.lazy(() => import("./components/Navbar"));
 const Footer = React.lazy(() => import("./components/Footer"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Home = React.lazy(() => import("./pages/Home"));
-
 const Recipes = React.lazy(() => import("./pages/Recipes"));
+const AddRecipe = React.lazy(() => import("./pages/AddRecipe/AddRecipe"));
 const MyRecipes = React.lazy(() => import("./pages/MyRecipes"));
 const MyProfile = React.lazy(() => import("./pages/MyProfile/MyProfile"));
+
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "recipes", element: <Recipes /> },
       { path: "add-recipe", element: <AddRecipe /> },
+      { path: "test", element: <TestForm /> },
       { path: "my-recipes", element: <MyRecipes /> },
       {
         path: "my-profile",
