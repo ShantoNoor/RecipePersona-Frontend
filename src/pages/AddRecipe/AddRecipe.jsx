@@ -1,6 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -66,7 +65,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -75,6 +73,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import Spinner from "@/components/Spinner";
 
 const allergicIngredients = [
   {
@@ -117,7 +116,7 @@ const steps = [
   {
     id: "Step 4",
     name: "Complete",
-    details: "Congratulations, you recipe in added",
+    details: "Congratulations, you recipe is successfully added!!",
   },
 ];
 
@@ -125,17 +124,19 @@ const AddRecipe = () => {
   const { user } = useAuth();
 
   const [previousStep, setPreviousStep] = useState(0);
-  const [currentStep, setCurrentStep] = useState(2);
+  const [currentStep, setCurrentStep] = useState(0);
   const delta = currentStep - previousStep;
 
   const [openCategories, setOpenCategories] = useState(false);
   const [haveVideo, setHaveVideo] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(recipeSchema),
     defaultValues: {
       name: "",
       cookTime: 5,
+      author: "",
       ingredients: [
         {
           name: "",
@@ -164,25 +165,35 @@ const AddRecipe = () => {
 
   useEffect(() => {
     if (user) {
-      form.setValue("author", user?.id);
+      form.setValue("author", user?._id);
     }
   }, [user, form]);
 
   const processForm = (data) => {
     console.log(data);
-    reset();
-    setCurrentStep(0);
+    setLoading(true);
+    toast.promise(axiosPublic.post(`/recipes`, data), {
+      loading: "Adding recipe, Please wait ...",
+      success: () => {
+        reset();
+        setLoading(false);
+        return "Recipe added successfully";
+      },
+      error: (err) => {
+        setLoading(false);
+        setCurrentStep(2);
+        toast.error("Failed to add recipe");
+        return err.message;
+      },
+    });
   };
 
   const next = async () => {
     const fields = steps[currentStep].fields;
+
     const output = await trigger(fields, { shouldFocus: true });
 
     if (!output) return;
-
-    fields.forEach((f) => {
-      console.log(watch(f));
-    });
 
     if (currentStep < steps.length - 1) {
       if (currentStep === steps.length - 2) {
@@ -194,30 +205,14 @@ const AddRecipe = () => {
   };
 
   const prev = () => {
-    if (currentStep > 0) {
+    if (currentStep === steps.length - 1) {
+      setPreviousStep(currentStep);
+      setCurrentStep(0);
+    } else if (currentStep > 0) {
       setPreviousStep(currentStep);
       setCurrentStep((step) => step - 1);
     }
   };
-
-  async function onSubmit(data) {
-    console.log(data);
-    // data.createdBy = user._id;
-
-    // if (typeof data.photo === "object") {
-    //   const uploadUrl = await photoUploader(photo);
-    //   updateFields.photo = uploadUrl;
-    // }
-
-    // toast.promise(axiosPublic.post(`/recipes`, data), {
-    //   loading: "Adding recipe, Please wait ...",
-    //   success: () => "Recipe added successfully",
-    //   error: (err) => {
-    //     toast.error("Failed to add recipe");
-    //     return err.message;
-    //   },
-    // });
-  }
 
   return (
     <section className="flex flex-col justify-between gap-10">
@@ -309,7 +304,14 @@ const AddRecipe = () => {
                         <FormControl>
                           <AvatarUpload
                             value={field.value}
-                            onChange={field.onChange}
+                            onChange={(value) => {
+                              field.onChange(value);
+                              photoUploader(value)
+                                .then((url) => field.onChange(url))
+                                .catch((err) => {
+                                  console.log(err);
+                                });
+                            }}
                             rounded={false}
                             icon={<Camera className="size-16" />}
                           />
@@ -691,7 +693,7 @@ const AddRecipe = () => {
                               <FormControl>
                                 <Input
                                   type="text"
-                                  className=" w-96"
+                                  className="w-96"
                                   placeholder="Please, provide your video url ..."
                                   {...field}
                                 />
@@ -714,7 +716,13 @@ const AddRecipe = () => {
               animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <FormHeading step={steps[currentStep]} />
+              {loading ? (
+                <div className="mt-8">
+                  <Spinner />
+                </div>
+              ) : (
+                <FormHeading step={steps[currentStep]} />
+              )}
             </motion.div>
           )}
         </form>

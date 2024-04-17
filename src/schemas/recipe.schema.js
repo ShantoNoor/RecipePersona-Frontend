@@ -3,7 +3,7 @@ import { z } from "zod";
 export const recipeSchema = z.object({
   name: z.string().min(3),
   category: z.string(),
-  image: z.any(),
+  image: z.string(),
   cuisine: z.string(),
   video: z.string().optional(),
   cookTime: z.number(),
@@ -13,8 +13,8 @@ export const recipeSchema = z.object({
 
   ingredients: z.array(
     z.object({
-      name: z.string(),
-      measure: z.string().optional(),
+      name: z.string().min(3),
+      measure: z.string().min(3),
     })
   ),
 
