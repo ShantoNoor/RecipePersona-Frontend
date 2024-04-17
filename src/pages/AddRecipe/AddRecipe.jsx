@@ -56,6 +56,7 @@ import {
 
 import cuisines from "./data/cuisines.json";
 import categories from "./data/categories.json";
+
 import { cn } from "@/utils/utils";
 import { Slider } from "@/components/ui/slider";
 import minutesToHoursAndMinutes from "@/utils/minutesToHoursAndMinutes";
@@ -74,6 +75,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import Spinner from "@/components/Spinner";
+import Ingredien from "./Ingredien";
 
 const allergicIngredients = [
   {
@@ -116,7 +118,7 @@ const steps = [
   {
     id: "Step 4",
     name: "Complete",
-    details: "Congratulations, you recipe is successfully added!!",
+    details: "Congratulations, your recipe is successfully added!!",
   },
 ];
 
@@ -532,24 +534,7 @@ const AddRecipe = () => {
                             </Button>
                           </CardHeader>
                           <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            <FormField
-                              control={form.control}
-                              name={`ingredients.${idx}.name`}
-                              render={({ field }) => (
-                                <FormItem>
-                                  <FormLabel>Name</FormLabel>
-                                  <FormControl>
-                                    <Input
-                                      placeholder="ingredient's name .."
-                                      type="text"
-                                      {...field}
-                                    />
-                                  </FormControl>
-                                  <FormMessage />
-                                </FormItem>
-                              )}
-                            />
-
+                            <Ingredien form={form} idx={idx} />
                             <FormField
                               control={form.control}
                               name={`ingredients.${idx}.measure`}

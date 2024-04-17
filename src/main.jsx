@@ -11,7 +11,6 @@ import Spinner from "./components/Spinner";
 
 import General from "./pages/MyProfile/General";
 import Preferences from "./pages/MyProfile/Preferences";
-import TestForm from "./pages/AddRecipe/TestForm";
 const Navbar = React.lazy(() => import("./components/Navbar"));
 const Footer = React.lazy(() => import("./components/Footer"));
 const Login = React.lazy(() => import("./pages/Login"));
@@ -38,7 +37,6 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "recipes", element: <Recipes /> },
       { path: "add-recipe", element: <AddRecipe /> },
-      { path: "test", element: <TestForm /> },
       { path: "my-recipes", element: <MyRecipes /> },
       {
         path: "my-profile",
