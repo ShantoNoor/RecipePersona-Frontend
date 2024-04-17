@@ -15,13 +15,6 @@ export default function MyProfile() {
   const { pathname } = useLocation();
   return (
     <div className="flex flex-1 flex-col gap-4 md:gap-8">
-      <div className="space-y-0.5">
-        <h2 className="text-2xl font-bold tracking-tight">Profie</h2>
-        <p className="text-muted-foreground">
-          Manage your account settings and set preferences.
-        </p>
-      </div>
-      <Separator />
       <div className="mx-auto grid w-full  items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
         <div className="md:grid gap-4 text-sm text-muted-foreground hidden">
           <Link
@@ -73,7 +66,12 @@ export default function MyProfile() {
           </Breadcrumb>
           <Separator />
         </div>
-        <div className="grid gap-6">
+        <div className="grid gap-6 relative">
+          <Separator
+            orientation="vertical"
+            className="absolute top-0 -left-10"
+          />
+
           <Suspense fallback={<Spinner />}>
             <Outlet />
           </Suspense>

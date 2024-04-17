@@ -1,15 +1,14 @@
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Separator } from "@/components/ui/separator";
 
-const ProfileSection = ({ title, subtitle = "", children }) => {
+const ProfileSection = ({ title, subtitle = "" }) => {
   return (
-    <div className="space-y-6">
-      <div>
-        <h3 className="text-lg font-medium">{title}</h3>
-        <p className="text-sm text-muted-foreground">{subtitle}</p>
+    <>
+      <div className="space-y-2">
+        <h2 className="text-2xl font-bold tracking-tight">{title}</h2>
+        <p className="text-muted-foreground">{subtitle}</p>
+        <Separator />
       </div>
-      <Separator />
-      {children}
-    </div>
+    </>
   );
 };
 

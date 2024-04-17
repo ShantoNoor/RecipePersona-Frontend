@@ -122,10 +122,11 @@ const Preferences = () => {
   };
 
   return (
-    <ProfileSection
-      title="Personalization"
-      subtitle="Update your preferences to get personalized recommendations."
-    >
+    <>
+      <ProfileSection
+        title="Personalization"
+        subtitle="Update your preferences to get personalized recommendations."
+      />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -188,9 +189,7 @@ const Preferences = () => {
                   <FormLabel className="text-base">
                     What is your favorite cuisines ?
                   </FormLabel>
-                  <FormDescription>
-                    Select multiple if you like
-                  </FormDescription>
+                  <FormDescription>Select multiple if you like</FormDescription>
                 </div>
                 {favoriteCuisines.map((item) => (
                   <FormField
@@ -250,7 +249,10 @@ const Preferences = () => {
                         className="flex items-center space-x-3 space-y-0"
                       >
                         <FormControl>
-                          <RadioGroupItem value={item.id} checked={field.value === item.id} />
+                          <RadioGroupItem
+                            value={item.id}
+                            checked={field.value === item.id}
+                          />
                         </FormControl>
                         <FormLabel className="font-normal">
                           {item.label}
@@ -266,7 +268,7 @@ const Preferences = () => {
           <Button type="submit">Update preferences</Button>
         </form>
       </Form>
-    </ProfileSection>
+    </>
   );
 };
 

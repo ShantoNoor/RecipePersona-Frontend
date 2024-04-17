@@ -67,7 +67,11 @@ const General = () => {
   }
 
   return (
-    <ProfileSection title="Account" subtitle="Update your account settings.">
+    <>
+      <ProfileSection
+        title="Account"
+        subtitle="Update your account settings."
+      />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -116,7 +120,7 @@ const General = () => {
           <Button type="submit">Update account</Button>
         </form>
       </Form>
-    </ProfileSection>
+    </>
   );
 };
 
