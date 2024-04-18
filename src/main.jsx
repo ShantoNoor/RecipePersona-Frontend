@@ -66,7 +66,11 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider
+      defaultTheme="dark"
+      attribute="class"
+      storageKey="vite-ui-theme"
+    >
       <QueryClientProvider client={queryClient}>
         <HelmetProvider>
           <AuthProvider>

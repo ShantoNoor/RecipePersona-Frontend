@@ -1,11 +1,105 @@
+import Spinner from "@/components/Spinner";
+import useAuth from "@/hooks/useAuth";
+import axiosPublic from "@/hooks/useAxios";
+import { useQuery } from "@tanstack/react-query";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import getTimeAgoString from "@/utils/getTimeAgoString";
+import { Button } from "@/components/ui/button";
+import { MessagesSquare, Pencil, Trash } from "lucide-react";
+
 const MyRecipes = () => {
+  const { user } = useAuth();
+  const { data, error, isPending } = useQuery({
+    queryKey: ["recipes", `author=${user?._id}`],
+    enabled: !!user,
+    queryFn: async () => {
+      try {
+        const result = await axiosPublic.get(`/recipes?author=${user._id}`);
+        return result.data;
+      } catch (err) {
+        console.error("Error fetching recipes:", err);
+      }
+    },
+  });
+
+  if (isPending) return <Spinner />;
+  if (error) return "An error has occurred: " + error.message;
+
   return (
     <>
-      <div>
-        MyRecipes
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {data.map((recipe) => (
+          <Card
+            key={recipe}
+            className="flex flex-col overflow-hidden rounded-lg shadow-md"
+          >
+            <CardHeader className="flex flex-row gap-4 items-center">
+              <Avatar>
+                <AvatarImage
+                  src={recipe.author.photo}
+                  className="object-cover w-12 h-12 rounded-full shadow"
+                />
+                <AvatarFallback>{recipe.author.name}</AvatarFallback>
+              </Avatar>
+
+              <div className="flex flex-col space-y-1">
+                <span className="text-sm font-semibold">
+                  {recipe.author.name}
+                </span>
+                <span className="text-xs">
+                  {getTimeAgoString(recipe.createdAt)}
+                </span>
+              </div>
+            </CardHeader>
+            <CardContent className="flex-1">
+              <img
+                src={recipe.image}
+                alt={recipe.name}
+                className="object-cover w-full mb-4 h-60 sm:h-96"
+              />
+              <CardTitle className="mb-1 text-xl font-semibold">
+                {recipe.name}
+              </CardTitle>
+              <CardDescription className="text-sm">
+                {recipe.instructions.length > 184
+                  ? `${recipe.instructions.substring(0, 184)} ...`
+                  : recipe.instructions}
+              </CardDescription>
+            </CardContent>
+            <CardFooter className="flex flex-wrap justify-between">
+              <div className="space-x-2">
+                <Button variant="ghost" size="icon">
+                  <Pencil className="size-4 text-primary" />
+                </Button>
+                <Button variant="ghost" size="icon">
+                  <Trash className="size-4 text-primary" />
+                </Button>
+              </div>
+              <div className="flex space-x-2 text-sm text-gray-600 dark:text-gray-600">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center p-1 space-x-1.5"
+                >
+                  <MessagesSquare className="size-4" />
+                  <span className="text-base font-light">0</span>
+                </Button>
+              </div>
+            </CardFooter>
+          </Card>
+        ))}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default MyRecipes
+export default MyRecipes;
