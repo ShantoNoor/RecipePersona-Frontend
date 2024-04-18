@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 
 import { motion } from "framer-motion";
+import Title from "@/components/Title";
 
 const imgs = [
   "https://www.themealdb.com/images/media/meals/xrysxr1483568462.jpg",
@@ -71,6 +72,8 @@ const MotionCard = motion(Card);
 const Home = () => {
   return (
     <>
+      <Title>Home</Title>
+
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
@@ -95,7 +98,7 @@ const Home = () => {
             className="z-[1] flex flex-col gap-1 items-center justify-center"
           >
             <PageHeaderHeading className="text-white">
-              RecipePersona
+              Recipe Persona
             </PageHeaderHeading>
             <PageHeaderDescription className="text-zinc-100">
               Your Personalized Recipe Guide. Discover delicious recipes, get

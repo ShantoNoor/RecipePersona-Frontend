@@ -111,7 +111,7 @@ const steps = [
   },
   {
     id: "Step 3",
-    name: "Answer Questions",
+    name: "Answer Question",
     details: "Please, answer the following questions carefully.",
     fields: ["allergicIngredients", "video"],
   },
