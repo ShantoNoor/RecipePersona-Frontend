@@ -50,11 +50,11 @@ const MyRecipes = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {data.map((recipe) => (
           <Card
             key={recipe._id}
-            className="flex flex-col overflow-hidden rounded-lg shadow-md cursor-pointer"
+            className="flex flex-col overflow-hidden rounded-lg shadow-md"
           >
             <CardHeader className="flex flex-row gap-4 items-center">
               <Avatar>
@@ -78,7 +78,7 @@ const MyRecipes = () => {
               <img
                 src={recipe.image}
                 alt={recipe.name}
-                className="object-cover w-full mb-4 h-60 sm:h-96"
+                className=" object-cover w-full mb-4 "
               />
               <CardTitle className="mb-1 text-xl font-semibold">
                 {recipe.name}

@@ -295,8 +295,8 @@ const AddRecipe = () => {
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
               <FormHeading step={steps[currentStep]} />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="relative">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                <div className="md:col-span-3">
                   <FormField
                     control={form.control}
                     name="image"
@@ -322,13 +322,13 @@ const AddRecipe = () => {
                       </FormItem>
                     )}
                   />
-                  <Separator
-                    className="absolute left-[85%] top-0 hidden md:block"
-                    orientation="vertical"
-                  />
                 </div>
+                <Separator
+                  className="hidden md:block ml-[90%]"
+                  orientation="vertical"
+                />
 
-                <div className="space-y-6 md:col-span-2">
+                <div className="space-y-6 md:col-span-8">
                   <FormField
                     control={form.control}
                     name="name"

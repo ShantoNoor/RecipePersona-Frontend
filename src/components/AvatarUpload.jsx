@@ -23,7 +23,7 @@ export default function AvatarUpload({
   };
 
   return (
-    <div className="relative w-40 h-40">
+    <div className="relative size-52 lg:size-72">
       <Avatar className={cn("w-full h-full", !rounded && "rounded-none")}>
         <AvatarImage src={!photo ? value : photo} className="object-cover" />
         <AvatarFallback className={cn("bg-accent", !rounded && "rounded-none")}>
