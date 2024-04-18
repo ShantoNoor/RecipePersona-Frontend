@@ -14,14 +14,25 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import getTimeAgoString from "@/utils/getTimeAgoString";
 import { Button } from "@/components/ui/button";
-import { MessagesSquare, Pencil, Trash } from "lucide-react";
+import { EyeIcon, Pencil, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const MyRecipes = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
-  const { data, error, isPending } = useQuery({
+  const { data, error, isPending, refetch } = useQuery({
     queryKey: ["recipes", `author=${user?._id}`],
     enabled: !!user,
     queryFn: async () => {
@@ -43,7 +54,7 @@ const MyRecipes = () => {
         {data.map((recipe) => (
           <Card
             key={recipe._id}
-            className="flex flex-col overflow-hidden rounded-lg shadow-md"
+            className="flex flex-col overflow-hidden rounded-lg shadow-md cursor-pointer"
           >
             <CardHeader className="flex flex-row gap-4 items-center">
               <Avatar>
@@ -78,8 +89,16 @@ const MyRecipes = () => {
                   : recipe.instructions}
               </CardDescription>
             </CardContent>
-            <CardFooter className="flex flex-wrap justify-between">
+            <CardFooter className="flex flex-wrap justify-end">
               <div className="space-x-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => navigate(`/view-recipe/${recipe._id}`)}
+                >
+                  <EyeIcon className="size-4 text-primary" />
+                </Button>
+
                 <Button
                   variant="ghost"
                   size="icon"
@@ -87,19 +106,46 @@ const MyRecipes = () => {
                 >
                   <Pencil className="size-4 text-primary" />
                 </Button>
-                <Button variant="ghost" size="icon">
-                  <Trash className="size-4 text-primary" />
-                </Button>
-              </div>
-              <div className="flex space-x-2 text-sm text-gray-600 dark:text-gray-600">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="flex items-center p-1 space-x-1.5"
-                >
-                  <MessagesSquare className="size-4" />
-                  <span className="text-base font-light">0</span>
-                </Button>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon">
+                      <Trash className="size-4 text-primary" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Are you absolutely sure?</DialogTitle>
+                      <DialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your recipe and remove the recipe from the
+                        database.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                      <Button
+                        onClick={() => {
+                          toast.promise(
+                            axiosPublic.delete(`/recipes/${recipe._id}`),
+                            {
+                              loading: "Deleting recipe, Please wait ...",
+                              success: () => {
+                                refetch();
+                                return "Recipe deleted successfully";
+                              },
+                              error: (err) => {
+                                toast.error("Failed to delete recipe");
+                                return err.message;
+                              },
+                            }
+                          );
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
             </CardFooter>
           </Card>
