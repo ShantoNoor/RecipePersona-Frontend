@@ -18,15 +18,15 @@ const photoUploader = (photo) => {
         }
       ),
       {
-        loading: "Uploading photo please wait ...",
+        loading: "Uploading image please wait ...",
         success: (res) => {
           const photoUrl = res.data.data.url;
           resolve(photoUrl);
-          return "Photo upload successfull";
+          return "Image upload successfull";
         },
         error: (err) => {
           reject(null);
-          toast.error("Unable to upload photo");
+          toast.error("Unable to upload image");
           return err.message;
         },
       }

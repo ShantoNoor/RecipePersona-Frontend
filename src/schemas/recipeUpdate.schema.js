@@ -1,13 +1,12 @@
 import { z } from "zod";
 
-export const recipeSchema = z.object({
+export const recipeUpdateSchema = z.object({
   name: z.string().min(3),
   category: z.string(),
   image: z.any(),
   cuisine: z.string(),
   video: z.string().optional(),
   cookTime: z.number(),
-  author: z.string(),
 
   instructions: z.string().min(10),
 

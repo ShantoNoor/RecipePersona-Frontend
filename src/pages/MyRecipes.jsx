@@ -15,9 +15,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import getTimeAgoString from "@/utils/getTimeAgoString";
 import { Button } from "@/components/ui/button";
 import { MessagesSquare, Pencil, Trash } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const MyRecipes = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
+
   const { data, error, isPending } = useQuery({
     queryKey: ["recipes", `author=${user?._id}`],
     enabled: !!user,
@@ -39,7 +42,7 @@ const MyRecipes = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {data.map((recipe) => (
           <Card
-            key={recipe}
+            key={recipe._id}
             className="flex flex-col overflow-hidden rounded-lg shadow-md"
           >
             <CardHeader className="flex flex-row gap-4 items-center">
@@ -77,7 +80,11 @@ const MyRecipes = () => {
             </CardContent>
             <CardFooter className="flex flex-wrap justify-between">
               <div className="space-x-2">
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => navigate(`/update-recipe/${recipe._id}`)}
+                >
                   <Pencil className="size-4 text-primary" />
                 </Button>
                 <Button variant="ghost" size="icon">

@@ -18,6 +18,7 @@ const Navbar = React.lazy(() => import("./components/Navbar"));
 const Footer = React.lazy(() => import("./components/Footer"));
 const Login = React.lazy(() => import("./pages/Login"));
 const Home = React.lazy(() => import("./pages/Home"));
+const UpdateRecipe = React.lazy(() => import("./pages/UpdateRecipe"));
 const Recipes = React.lazy(() => import("./pages/Recipes"));
 const AddRecipe = React.lazy(() => import("./pages/AddRecipe/AddRecipe"));
 const MyRecipes = React.lazy(() => import("./pages/MyRecipes"));
@@ -41,6 +42,7 @@ const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "recipes", element: <Recipes /> },
       { path: "add-recipe", element: <AddRecipe /> },
+      { path: "update-recipe/:_id", element: <UpdateRecipe /> },
       { path: "my-recipes", element: <MyRecipes /> },
       {
         path: "my-profile",
