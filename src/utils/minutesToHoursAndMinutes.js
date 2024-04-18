@@ -9,9 +9,9 @@ export default function minutesToHoursAndMinutes(minutes) {
   const remainingMinutes = minutes % 60;
 
   // Format the output string
-  const hoursString = hours === 0 ? "" : `${hours} hour(s) `;
+  const hoursString = hours === 0 ? "" : `${hours} Hour `;
   const minutesString =
-    remainingMinutes === 0 ? "" : `${remainingMinutes} minute(s)`;
+    remainingMinutes === 0 ? "" : `${remainingMinutes} Minute`;
 
   return hoursString + minutesString;
 }

@@ -12,6 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import getTimeAgoString from "@/utils/getTimeAgoString";
 import { useNavigate } from "react-router-dom";
+import Image from "@/components/Image";
 
 const Recipes = () => {
   const navigate = useNavigate();
@@ -59,7 +60,7 @@ const Recipes = () => {
               </div>
             </CardHeader>
             <CardContent className="flex-1">
-              <img
+              <Image
                 src={recipe.image}
                 alt={recipe.name}
                 className="object-cover w-full mb-4 h-60 sm:h-96"
