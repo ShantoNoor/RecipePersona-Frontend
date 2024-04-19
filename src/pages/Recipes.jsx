@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import getTimeAgoString from "@/utils/getTimeAgoString";
 import { useNavigate } from "react-router-dom";
 import Image from "@/components/Image";
+import { Separator } from "@/components/ui/separator";
 
 const Recipes = () => {
   const navigate = useNavigate();
@@ -41,7 +42,7 @@ const Recipes = () => {
             onClick={() => navigate(`/view-recipe/${recipe._id}`)}
             className="flex flex-col overflow-hidden rounded-lg shadow-md cursor-pointer"
           >
-            <CardHeader className="flex flex-row gap-4 items-center">
+            <CardHeader className="flex flex-row gap-4 items-center p-4">
               <Avatar>
                 <AvatarImage
                   src={recipe.author.photo}
@@ -59,11 +60,14 @@ const Recipes = () => {
                 </span>
               </div>
             </CardHeader>
-            <CardContent className="">
+            <div className="px-4">
+              <Separator />
+            </div>
+            <CardContent className="p-4">
               <Image
                 src={recipe.image}
                 alt={recipe.name}
-                className="object-cover aspect-square w-full mb-4 "
+                className="object-cover aspect-square w-full mb-4 rounded-md"
               />
               <CardTitle className="mb-1 text-xl font-semibold">
                 {recipe.name}

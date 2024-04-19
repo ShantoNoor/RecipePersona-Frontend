@@ -8,11 +8,8 @@ import {
   CardContent,
   CardDescription,
   CardFooter,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import getTimeAgoString from "@/utils/getTimeAgoString";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, Pencil, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -28,6 +25,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import Image from "@/components/Image";
+import { Separator } from "@/components/ui/separator";
 
 const MyRecipes = () => {
   const { user } = useAuth();
@@ -57,30 +55,15 @@ const MyRecipes = () => {
             key={recipe._id}
             className="flex flex-col overflow-hidden rounded-lg shadow-md"
           >
-            <div onClick={() => navigate(`/view-recipe/${recipe._id}`)} className="cursor-pointer flex-1">
-              <CardHeader className="flex flex-row gap-4 items-center">
-                <Avatar>
-                  <AvatarImage
-                    src={recipe.author.photo}
-                    className="object-cover w-12 h-12 rounded-full shadow"
-                  />
-                  <AvatarFallback>{recipe.author.name}</AvatarFallback>
-                </Avatar>
-
-                <div className="flex flex-col space-y-1">
-                  <span className="text-sm font-semibold">
-                    {recipe.author.name}
-                  </span>
-                  <span className="text-xs">
-                    {getTimeAgoString(recipe.createdAt)}
-                  </span>
-                </div>
-              </CardHeader>
-              <CardContent className="">
+            <div
+              onClick={() => navigate(`/view-recipe/${recipe._id}`)}
+              className="cursor-pointer flex-1"
+            >
+              <CardContent className="p-4">
                 <Image
                   src={recipe.image}
                   alt={recipe.name}
-                  className="object-cover aspect-square w-full mb-4 "
+                  className="object-cover aspect-square w-full mb-4 rounded-md"
                 />
                 <CardTitle className="mb-1 text-xl font-semibold">
                   {recipe.name}
@@ -92,7 +75,10 @@ const MyRecipes = () => {
                 </CardDescription>
               </CardContent>
             </div>
-            <CardFooter className="flex flex-wrap justify-end">
+            <div className="px-4">
+              <Separator />
+            </div>
+            <CardFooter className="flex flex-wrap justify-end p-4">
               <div className="space-x-2">
                 <Button
                   variant="ghost"
