@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProfileSection from "./MyProfile/ProfileSection";
+import { Badge } from "@/components/ui/badge";
 
 const ViewRecipe = () => {
   const { _id } = useParams();
@@ -44,7 +45,7 @@ const ViewRecipe = () => {
   if (error) return "An error has occurred: " + error.message;
 
   return (
-    <article className="grid grid-cols-1 lg:grid-cols-3 mt-6 gap-12">
+    <article className="grid grid-cols-1 lg:grid-cols-3 mt-6 gap-6 md:gap-12">
       <div className="space-y-6 md:col-span-2">
         <div className="space-y-8">
           <div className="space-y-6">
@@ -67,7 +68,7 @@ const ViewRecipe = () => {
                   className="absolute -left-7"
                   orientation="vertical"
                 />
-                Cooking Time: {minutesToHoursAndMinutes(recipe.cookTime)}
+                • Cooking Time: {minutesToHoursAndMinutes(recipe.cookTime)}
               </div>
             </div>
           </div>
@@ -81,7 +82,7 @@ const ViewRecipe = () => {
               src={recipe.image}
               alt={recipe.name}
             />
-            <div className="absolute left-0 right-0 top-[75%] bottom-0 bg-transparent backdrop-blur-xl backdrop-opacity-75 rounded-xl" />
+            <div className="absolute left-0 right-0 top-[70%] bottom-0 bg-transparent backdrop-blur-xl backdrop-opacity-75 rounded-xl" />
           </div>
           <div className="flex justify-center items-center gap-2 flex-wrap absolute top-4 right-4">
             <Card className="px-2 py-1 rounded bg-primary text-capitalize text-white">
@@ -99,52 +100,73 @@ const ViewRecipe = () => {
             )}
           </div>
 
-          <div className="space-y-4 leading-relaxed font-semibold -mt-[25%] p-4 relative text-white">
-            <h2 className="text-2xl font-bold tracking-tight">Instructions</h2>
-            <Separator className="bg-white" />
-            {recipe.instructions.split("\n").map((line, idx) => (
-              <Card key={idx} className="overflow-hidden">
-                <CardContent className="flex items-center p-0 gap-4">
-                  <CardHeader className="bg-accent font-black text-primary">
-                    <CardTitle>{idx + 1}</CardTitle>
-                  </CardHeader>
-                  <CardDescription className="font-extrabold text-foreground">
-                    {line}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="leading-relaxed font-semibold -mt-[30%] p-4 relative space-y-6">
+            <div className="block lg:hidden !text-white">
+              <ShowIngredients recipe={recipe} />
+            </div>
+            <div className="space-y-4 lg:text-foreground">
+              <h2 className="text-2xl font-bold tracking-tight">
+                Instructions
+              </h2>
+              <Separator />
+              {recipe.instructions.split("\n").map((line, idx) => (
+                <Card key={idx} className="overflow-hidden">
+                  <CardContent className="flex items-stretch p-0">
+                    <CardHeader className="bg-accent font-black text-primary p-4 flex justify-center">
+                      <CardTitle>{idx + 1}</CardTitle>
+                    </CardHeader>
+                    <CardDescription className="font-extrabold text-foreground p-4">
+                      {line}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
       </div>
-      <div className="space-y-3">
-        <ProfileSection title={`Ingredients (${recipe.ingredients.length})`} />
-        {recipe.ingredients.map((ingredient, idx) => (
-          <Card key={idx} className="flex flex-row">
-            <CardHeader className="flex flex-row gap-4 items-center p-4">
-              <Avatar className="rounded-none size-16">
-                <AvatarImage
-                  src={`http://www.themealdb.com/images/ingredients/${ingredient.name}.png`}
-                  className="object-cover size-16 shadow"
-                />
-                <AvatarFallback className="rounded-none size-16">
-                  {ingredient.name}
-                </AvatarFallback>
-              </Avatar>
-            </CardHeader>
-            <CardContent className="flex flex-col py-8 px-4 gap-1 text-center">
-              <span>{ingredient.name}</span>
-              <Separator />
-              <span>
-                Measure:{" "}
-                <span className="text-primary">{ingredient.measure}</span>
-              </span>
-            </CardContent>
-          </Card>
-        ))}
+
+      <div className="hidden lg:block">
+        <ShowIngredients recipe={recipe} />
       </div>
     </article>
   );
 };
 
 export default ViewRecipe;
+
+function ShowIngredients({ recipe }) {
+  return (
+    <div className="space-y-3">
+      <ProfileSection title={`Ingredients (${recipe.ingredients.length})`} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-3">
+        {recipe.ingredients.map((ingredient, idx) => (
+          <Card
+            key={idx}
+            className="flex flex-row items-stretch overflow-hidden"
+          >
+            <CardHeader className="p-0 w-10 flex justify-center items-center bg-accent text-primary">
+              <CardTitle>{idx + 1}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex p-0 gap-4">
+              <div className="flex flex-row gap-4 items-center">
+                <Image
+                  src={`http://www.themealdb.com/images/ingredients/${ingredient.name}.png`}
+                  className="object-cover size-16 shadow p-1 rounded-none size-15"
+                />
+              </div>
+              <div className="flex flex-col justify-center gap-[.15rem]">
+                <span>{ingredient.name}</span>
+                <Separator />
+                <span>
+                  Measure:{" "}
+                  <span className="text-primary">{ingredient.measure}</span>
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
