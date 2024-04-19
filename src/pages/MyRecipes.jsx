@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dialog";
 import Image from "@/components/Image";
 import { Separator } from "@/components/ui/separator";
+import Title from "@/components/Title";
 
 const MyRecipes = () => {
   const { user } = useAuth();
@@ -49,6 +50,7 @@ const MyRecipes = () => {
 
   return (
     <>
+      <Title>My Recipes</Title>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {data.map((recipe) => (
           <Card

@@ -61,6 +61,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import Ingredien from "./AddRecipe/Ingredien";
 import { recipeUpdateSchema } from "@/schemas/recipeUpdate.schema";
+import Title from "@/components/Title";
 
 const allergicIngredients = [
   {
@@ -157,7 +158,7 @@ const UpdateRecipe = () => {
       loading: "Updating recipe, Please wait ...",
       success: () => {
         refetch();
-        navigate("/my-recipes")
+        navigate("/my-recipes");
         return "Recipe updated successfully";
       },
       error: (err) => {
@@ -171,363 +172,363 @@ const UpdateRecipe = () => {
   if (error) return "An error has occurred: " + error.message;
 
   return (
-    <section className="flex flex-col justify-between gap-10">
-      {/* Form */}
-      <Form {...form}>
-        <form onSubmit={handleSubmit(processForm)} className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                <div className="md:col-span-3">
-                  <FormField
-                    control={form.control}
-                    name="image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Upload Your {`Recipe's`} Image</FormLabel>
+    <>
+      <Title>Update Recipe</Title>
+      <section className="flex flex-col justify-between gap-10">
+        {/* Form */}
+        <Form {...form}>
+          <form onSubmit={handleSubmit(processForm)} className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              <div className="md:col-span-3">
+                <FormField
+                  control={form.control}
+                  name="image"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Upload Your {`Recipe's`} Image</FormLabel>
+                      <FormControl>
+                        <AvatarUpload
+                          value={field.value}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            photoUploader(value)
+                              .then((url) => field.onChange(url))
+                              .catch((err) => {
+                                console.log(err);
+                              });
+                          }}
+                          rounded={false}
+                          icon={<Camera className="size-16" />}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <Separator
+                className="hidden md:block ml-[90%]"
+                orientation="vertical"
+              />
+
+              <div className="space-y-6 md:col-span-8">
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Name of Your Recipe</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Your Recipe's Name"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cuisine"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        What kind of recipe you would like to add?
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                      >
                         <FormControl>
-                          <AvatarUpload
-                            value={field.value}
-                            onChange={(value) => {
-                              field.onChange(value);
-                              photoUploader(value)
-                                .then((url) => field.onChange(url))
-                                .catch((err) => {
-                                  console.log(err);
-                                });
-                            }}
-                            rounded={false}
-                            icon={<Camera className="size-16" />}
-                          />
+                          <SelectTrigger className="capitalize">
+                            <SelectValue placeholder="Select a cuisine" />
+                          </SelectTrigger>
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <Separator
-                  className="hidden md:block ml-[90%]"
-                  orientation="vertical"
+                        <SelectContent>
+                          {cuisines.map((cuisine) => (
+                            <SelectItem
+                              key={cuisine}
+                              value={cuisine}
+                              className="capitalize"
+                            >
+                              {cuisine}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
 
-                <div className="space-y-6 md:col-span-8">
-                  <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name of Your Recipe</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Your Recipe's Name"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="cuisine"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>
-                          What kind of recipe you would like to add?
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="capitalize">
-                              <SelectValue placeholder="Select a cuisine" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {cuisines.map((cuisine) => (
-                              <SelectItem
-                                key={cuisine}
-                                value={cuisine}
-                                className="capitalize"
-                              >
-                                {cuisine}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem className="">
-                        <FormLabel>
-                          What category the recipe belongs to?
-                        </FormLabel>
-                        <Popover
-                          open={openCategories}
-                          onOpenChange={setOpenCategories}
-                        >
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn(
-                                  "w-full justify-between capitalize",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value
-                                  ? categories.find(
-                                      (categorie) =>
-                                        categorie.name === field.value
-                                    )?.name
-                                  : "Select a category"}
-                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-full p-0">
-                            <Command>
-                              <CommandInput placeholder="Search category..." />
-                              <CommandEmpty>No language found.</CommandEmpty>
-                              <CommandGroup>
-                                <ScrollArea className="h-72 w-full rounded-md border">
-                                  {categories.map((categorie) => (
-                                    <CommandItem
-                                      value={categorie.name}
-                                      key={categorie.name}
-                                      onSelect={() => {
-                                        form.setValue(
-                                          "category",
-                                          categorie.name
-                                        );
-                                        setOpenCategories(false);
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          "mr-2 h-4 w-4",
-                                          categorie.name === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                      {categorie.name}
-                                    </CommandItem>
-                                  ))}
-                                </ScrollArea>
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="cookTime"
-                    render={({ fields }) => (
-                      <FormItem>
-                        <FormLabel>
-                          How long does it take to perpare the recipe?
-                        </FormLabel>
-                        <FormControl>
-                          <Slider
-                            min={1}
-                            max={200}
-                            step={1}
-                            {...fields}
-                            value={[watch("cookTime")]}
-                            onValueChange={(value) =>
-                              setValue("cookTime", value[0])
-                            }
-                            className="w-full"
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Use the slider adjust time:{" "}
-                          {minutesToHoursAndMinutes(watch("cookTime"))}
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-          <Separator />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="">
-              <FormField
-                control={form.control}
-                name="instructions"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Instructions</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Write how to perpare the recipe ... "
-                        rows={40}
-                        className="rounded-xl"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div>
-              <FormItem>Ingredients</FormItem>
-              <div className="space-y-4 mt-2">
-                {fields.map((field, idx) => {
-                  return (
-                    <Card key={field.id} className="w-full">
-                      <CardHeader className="relative">
-                        <CardTitle>Ingredient</CardTitle>
-                        <CardDescription>
-                          Select the Name and Measure
-                        </CardDescription>
-                        <Button
-                          className="absolute right-6 top-5"
-                          variant="ghost"
-                          onClick={() => remove(idx)}
-                        >
-                          Cancel
-                        </Button>
-                      </CardHeader>
-                      <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <Ingredien form={form} idx={idx} />
-                        <FormField
-                          control={form.control}
-                          name={`ingredients.${idx}.measure`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Measure</FormLabel>
-                              <FormControl>
-                                <Input
-                                  placeholder="ingredient's measure .."
-                                  type="text"
-                                  {...field}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </CardContent>
-                    </Card>
-                  );
-                })}
-              </div>
-              <Button
-                onClick={() => append({ name: "", measure: "" })}
-                type="button"
-                size="sm"
-                className="flex mx-auto mt-4 gap-4"
-              >
-                <PlusCircle className="size-4" />{" "}
-                <span>Add More Ingredient</span>
-              </Button>
-            </div>
-          </div>
-          <Separator />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <FormField
-                control={form.control}
-                name="allergicIngredients"
-                render={() => (
-                  <FormItem>
-                    <div className="mb-4">
-                      <FormLabel className="text-base">
-                        Are there any of the following ingredients in your
-                        recipe?
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem className="">
+                      <FormLabel>
+                        What category the recipe belongs to?
                       </FormLabel>
-                      <FormDescription>
-                        Select carefully, many people are allergic to some of
-                        this ingredients.
-                      </FormDescription>
-                      <FormDescription>
-                        No need to select if {`don't`}
-                      </FormDescription>
-                    </div>
-                    {allergicIngredients.map((item) => (
-                      <FormField
-                        key={item.id}
-                        control={form.control}
-                        name="allergicIngredients"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={item.id}
-                              className="flex flex-row items-start space-x-3 space-y-0"
+                      <Popover
+                        open={openCategories}
+                        onOpenChange={setOpenCategories}
+                      >
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant="outline"
+                              role="combobox"
+                              className={cn(
+                                "w-full justify-between capitalize",
+                                !field.value && "text-muted-foreground"
+                              )}
                             >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(item.id)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([
-                                          ...field.value,
-                                          item.id,
-                                        ])
-                                      : field.onChange(
-                                          field.value.filter(
-                                            (value) => value !== item.id
-                                          )
-                                        );
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {item.label}
-                              </FormLabel>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+                              {field.value
+                                ? categories.find(
+                                    (categorie) =>
+                                      categorie.name === field.value
+                                  )?.name
+                                : "Select a category"}
+                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandInput placeholder="Search category..." />
+                            <CommandEmpty>No language found.</CommandEmpty>
+                            <CommandGroup>
+                              <ScrollArea className="h-72 w-full rounded-md border">
+                                {categories.map((categorie) => (
+                                  <CommandItem
+                                    value={categorie.name}
+                                    key={categorie.name}
+                                    onSelect={() => {
+                                      form.setValue("category", categorie.name);
+                                      setOpenCategories(false);
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        categorie.name === field.value
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    {categorie.name}
+                                  </CommandItem>
+                                ))}
+                              </ScrollArea>
+                            </CommandGroup>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="cookTime"
+                  render={({ fields }) => (
+                    <FormItem>
+                      <FormLabel>
+                        How long does it take to perpare the recipe?
+                      </FormLabel>
+                      <FormControl>
+                        <Slider
+                          min={1}
+                          max={200}
+                          step={1}
+                          {...fields}
+                          value={[watch("cookTime")]}
+                          onValueChange={(value) =>
+                            setValue("cookTime", value[0])
+                          }
+                          className="w-full"
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Use the slider adjust time:{" "}
+                        {minutesToHoursAndMinutes(watch("cookTime"))}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-            <div className="space-y-6">
-              <FormField
-                control={form.control}
-                name="video"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>VideoURL</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        className="w-96"
-                        placeholder="Please, provide your video url ..."
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </div>
+            <Separator />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="">
+                <FormField
+                  control={form.control}
+                  name="instructions"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Instructions</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Write how to perpare the recipe ... "
+                          rows={40}
+                          className="rounded-xl"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-          <Button type="submit" className="block mx-auto">
-            Update Recipe
-          </Button>
-        </form>
-      </Form>
-    </section>
+              <div>
+                <FormItem>Ingredients</FormItem>
+                <div className="space-y-4 mt-2">
+                  {fields.map((field, idx) => {
+                    return (
+                      <Card key={field.id} className="w-full">
+                        <CardHeader className="relative">
+                          <CardTitle>Ingredient</CardTitle>
+                          <CardDescription>
+                            Select the Name and Measure
+                          </CardDescription>
+                          <Button
+                            className="absolute right-6 top-5"
+                            variant="ghost"
+                            onClick={() => remove(idx)}
+                          >
+                            Cancel
+                          </Button>
+                        </CardHeader>
+                        <CardContent className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                          <Ingredien form={form} idx={idx} />
+                          <FormField
+                            control={form.control}
+                            name={`ingredients.${idx}.measure`}
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Measure</FormLabel>
+                                <FormControl>
+                                  <Input
+                                    placeholder="ingredient's measure .."
+                                    type="text"
+                                    {...field}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+                <Button
+                  onClick={() => append({ name: "", measure: "" })}
+                  type="button"
+                  size="sm"
+                  className="flex mx-auto mt-4 gap-4"
+                >
+                  <PlusCircle className="size-4" />{" "}
+                  <span>Add More Ingredient</span>
+                </Button>
+              </div>
+            </div>
+            <Separator />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <FormField
+                  control={form.control}
+                  name="allergicIngredients"
+                  render={() => (
+                    <FormItem>
+                      <div className="mb-4">
+                        <FormLabel className="text-base">
+                          Are there any of the following ingredients in your
+                          recipe?
+                        </FormLabel>
+                        <FormDescription>
+                          Select carefully, many people are allergic to some of
+                          this ingredients.
+                        </FormDescription>
+                        <FormDescription>
+                          No need to select if {`don't`}
+                        </FormDescription>
+                      </div>
+                      {allergicIngredients.map((item) => (
+                        <FormField
+                          key={item.id}
+                          control={form.control}
+                          name="allergicIngredients"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={item.id}
+                                className="flex flex-row items-start space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(item.id)}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([
+                                            ...field.value,
+                                            item.id,
+                                          ])
+                                        : field.onChange(
+                                            field.value.filter(
+                                              (value) => value !== item.id
+                                            )
+                                          );
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal">
+                                  {item.label}
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="space-y-6">
+                <FormField
+                  control={form.control}
+                  name="video"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>VideoURL</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          className="w-96"
+                          placeholder="Please, provide your video url ..."
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </div>
+
+            <Button type="submit" className="block mx-auto">
+              Update Recipe
+            </Button>
+          </form>
+        </Form>
+      </section>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ProfileSection from "./MyProfile/ProfileSection";
+import Title from "@/components/Title";
 
 const ViewRecipe = () => {
   const { _id } = useParams();
@@ -43,6 +44,8 @@ const ViewRecipe = () => {
   if (error) return "An error has occurred: " + error.message;
 
   return (
+    <>
+    <Title>{recipe.name}</Title>
     <article className="grid grid-cols-1 lg:grid-cols-3 mt-6 gap-6 md:gap-12">
       <div className="space-y-6 md:col-span-2">
         <div className="space-y-8">
@@ -132,6 +135,7 @@ const ViewRecipe = () => {
         <ShowIngredients recipe={recipe} />
       </div>
     </article>
+    </>
   );
 };
 

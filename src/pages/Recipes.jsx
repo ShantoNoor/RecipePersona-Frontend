@@ -14,6 +14,7 @@ import getTimeAgoString from "@/utils/getTimeAgoString";
 import { useNavigate } from "react-router-dom";
 import Image from "@/components/Image";
 import { Separator } from "@/components/ui/separator";
+import Title from "@/components/Title";
 
 const Recipes = () => {
   const navigate = useNavigate();
@@ -35,6 +36,7 @@ const Recipes = () => {
 
   return (
     <>
+      <Title>Recipes</Title>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {data.map((recipe) => (
           <Card
