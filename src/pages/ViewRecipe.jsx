@@ -13,9 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import ProfileSection from "./MyProfile/ProfileSection";
-import { Badge } from "@/components/ui/badge";
 
 const ViewRecipe = () => {
   const { _id } = useParams();
