@@ -104,7 +104,7 @@ const ViewRecipe = () => {
             <div className="block lg:hidden !text-white">
               <ShowIngredients recipe={recipe} />
             </div>
-            <div className="space-y-4 lg:text-foreground">
+            <div className="space-y-4 text-foreground lg:text-white">
               <h2 className="text-2xl font-bold tracking-tight">
                 Instructions
               </h2>

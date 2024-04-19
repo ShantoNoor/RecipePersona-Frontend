@@ -34,7 +34,7 @@ const Recipes = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {data.map((recipe) => (
           <Card
             key={recipe._id}
@@ -59,11 +59,11 @@ const Recipes = () => {
                 </span>
               </div>
             </CardHeader>
-            <CardContent className="flex-1">
+            <CardContent className="">
               <Image
                 src={recipe.image}
                 alt={recipe.name}
-                className="object-cover w-full mb-4 h-60 sm:h-96"
+                className="object-cover aspect-square w-full mb-4 "
               />
               <CardTitle className="mb-1 text-xl font-semibold">
                 {recipe.name}
