@@ -107,18 +107,22 @@ const ViewRecipe = () => {
                 Instructions
               </h2>
               <Separator />
-              {recipe.instructions.split("\n").map((line, idx) => (
-                <Card key={idx} className="overflow-hidden">
-                  <CardContent className="flex items-stretch p-0">
-                    <CardHeader className="bg-accent font-black text-primary p-4 flex justify-center">
-                      <CardTitle>{idx + 1}</CardTitle>
-                    </CardHeader>
-                    <CardDescription className="font-extrabold text-foreground p-4">
-                      {line}
-                    </CardDescription>
-                  </CardContent>
-                </Card>
-              ))}
+              {recipe.instructions.split("\n").map((line, idx) => {
+                return (
+                  line.trim() !== "" && (
+                    <Card key={idx} className="overflow-hidden">
+                      <CardContent className="flex items-stretch p-0">
+                        <CardHeader className="bg-accent font-black text-primary p-4 flex justify-center">
+                          <CardTitle>{idx + 1}</CardTitle>
+                        </CardHeader>
+                        <CardDescription className="font-extrabold text-foreground p-4">
+                          {line}
+                        </CardDescription>
+                      </CardContent>
+                    </Card>
+                  )
+                );
+              })}
             </div>
           </div>
         </div>
