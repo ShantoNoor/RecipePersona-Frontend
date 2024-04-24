@@ -91,7 +91,17 @@ const ViewRecipe = () => {
                 src={recipe.image}
                 alt={recipe.name}
               />
-              <div className="absolute left-0 right-0 top-[65%] bottom-0 bg-transparent backdrop-blur-xl backdrop-opacity-75 rounded-xl" />
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.5,
+                  },
+                }}
+                className="absolute left-0 right-0 top-[65%] bottom-0 bg-transparent backdrop-blur-xl backdrop-opacity-75 rounded-xl"
+              />
             </div>
             <div className="flex justify-center items-center gap-2 flex-wrap absolute top-4 right-4">
               <MotionCard
@@ -135,7 +145,7 @@ const ViewRecipe = () => {
                 # {recipe.cuisine}
               </MotionCard>
               {recipe.video && (
-                <Link to={recipe.video}>
+                <Link to={recipe.video} target="_blank">
                   <MotionCard
                     initial={{ opacity: 0, y: 30 }}
                     animate={{
@@ -164,7 +174,17 @@ const ViewRecipe = () => {
               <div className="block lg:hidden !text-white">
                 <ShowIngredients recipe={recipe} />
               </div>
-              <div className="space-y-4 text-foreground lg:text-white">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.5,
+                  },
+                }}
+                className="space-y-4 text-foreground lg:text-white"
+              >
                 <h2 className="text-2xl font-bold tracking-tight">
                   Instructions
                 </h2>
@@ -176,7 +196,6 @@ const ViewRecipe = () => {
                         key={idx}
                         className="overflow-hidden"
                         initial={{ opacity: 0, y: 30 }}
-                        // viewport={{ once: true }}
                         whileInView={{
                           opacity: 1,
                           y: 0,
@@ -198,7 +217,7 @@ const ViewRecipe = () => {
                     )
                   );
                 })}
-              </div>
+              </motion.div>
             </div>
           </div>
         </motion.div>

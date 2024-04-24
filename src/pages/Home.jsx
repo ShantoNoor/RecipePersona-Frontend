@@ -28,21 +28,10 @@ import {
 
 import { motion } from "framer-motion";
 import Title from "@/components/Title";
-
-const imgs = [
-  "https://www.themealdb.com/images/media/meals/xrysxr1483568462.jpg",
-  "https://www.themealdb.com/images/media/meals/t8mn9g1560460231.jpg",
-  "https://www.themealdb.com/images/media/meals/rpvptu1511641092.jpg",
-  "https://www.themealdb.com/images/media/meals/qptpvt1487339892.jpg",
-  "https://www.themealdb.com/images/media/meals/1529444113.jpg",
-  "https://www.themealdb.com/images/media/meals/sutysw1468247559.jpg",
-  "https://www.themealdb.com/images/media/meals/xxyupu1468262513.jpg",
-  "https://www.themealdb.com/images/media/meals/xxpqsy1511452222.jpg",
-  "https://www.themealdb.com/images/media/meals/wvpsxx1468256321.jpg",
-  "https://www.themealdb.com/images/media/meals/uttupv1511815050.jpg",
-  "https://www.themealdb.com/images/media/meals/1525876468.jpg",
-  "https://www.themealdb.com/images/media/meals/1525873040.jpg",
-];
+import { useQuery } from "@tanstack/react-query";
+import axiosPublic from "@/hooks/useAxios";
+import Spinner from "@/components/Spinner";
+import { useNavigate } from "react-router-dom";
 
 const features = [
   {
@@ -70,6 +59,22 @@ const features = [
 const MotionCard = motion(Card);
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const { data, error, isPending } = useQuery({
+    queryKey: ["home"],
+    queryFn: async () => {
+      try {
+        const result = await axiosPublic.get(`/home`);
+        return result.data;
+      } catch (err) {
+        console.error("Error fetching recipes:", err);
+      }
+    },
+  });
+
+  if (error) return "An error has occurred: " + error.message;
+
   return (
     <>
       <Title>Home</Title>
@@ -135,27 +140,36 @@ const Home = () => {
             }),
           ]}
         >
-          <CarouselContent className="-ml-2 md:-ml-4 mx-auto">
-            {imgs.map((img, idx) => (
-              <CarouselItem
-                key={idx}
-                className="flex min-w-[350px] md:min-w-auto basis-1/2 md:basis-1/4 lg:basis-1/6 pl-2 md:pl-4 items-center justify-center p-6 cursor-pointer"
-              >
-                <div className="border-secondary rounded-lg overflow-hidden border">
-                  <div className="overflow-hidden">
-                    <Image
-                      src={img}
-                      className="h-auto w-auto object-cover transition-all aspect-square hover:scale-110"
-                    />
+          {isPending ? (
+            <Spinner />
+          ) : (
+            <CarouselContent className="-ml-2 md:-ml-4 mx-auto">
+              {data.map((recipe, idx) => (
+                <CarouselItem
+                  key={idx}
+                  onClick={() => navigate(`/view-recipe/${recipe._id}`)}
+                  className="flex min-w-[350px] md:min-w-auto basis-1/2 md:basis-1/4 lg:basis-1/6 pl-2 md:pl-4 items-center justify-center p-6 cursor-pointer"
+                >
+                  <div className="border-secondary rounded-lg overflow-hidden border">
+                    <div className="overflow-hidden">
+                      <Image
+                        src={recipe.image}
+                        className="h-auto w-auto object-cover transition-all aspect-square hover:scale-110"
+                      />
+                    </div>
+                    <div className="space-y-1 text-sm p-2">
+                      <h3 className="font-medium leading-none">
+                        {recipe.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {recipe.cuisine}
+                      </p>
+                    </div>
                   </div>
-                  <div className="space-y-1 text-sm p-2">
-                    <h3 className="font-medium leading-none">Title</h3>
-                    <p className="text-xs text-muted-foreground">SubTitle</p>
-                  </div>
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          )}
           <CarouselPrevious className="left-1" />
           <CarouselNext className="right-1" />
         </Carousel>
