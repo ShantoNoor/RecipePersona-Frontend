@@ -64,23 +64,23 @@ const dietaryPreferences = [
   },
   {
     id: "non-veg",
-    label: "Non-Vegetarian (meat)",
+    label: "Non-Vegetarian",
   },
   {
     id: "veg-noMeat-noEgg",
-    label: "Vegetarian (no meat, no eggs)",
+    label: "Vegetarian (no eggs)",
   },
   {
     id: "veg-noMeat-noDairyProductucs",
-    label: "Vegetarian (no meat, no dairy productucs)",
+    label: "Vegetarian (no dairy productucs)",
   },
   {
     id: "veg-noMeat-egg-dairyProductucs",
-    label: "Vegetarian (no meat but with eggs and dairy productucs)",
+    label: "Vegetarian (eggs and dairy productucs)",
   },
   {
     id: "vegan",
-    label: "Vegan (no meat, no eggs, no dairy productucs)",
+    label: "Vegan (no eggs, no dairy productucs)",
   },
 ];
 

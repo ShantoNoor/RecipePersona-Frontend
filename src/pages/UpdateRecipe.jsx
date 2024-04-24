@@ -80,6 +80,10 @@ const allergicIngredients = [
     id: "meat",
     label: "Meat",
   },
+  {
+    id: "fish",
+    label: "Fish",
+  },
 ];
 
 const UpdateRecipe = () => {
