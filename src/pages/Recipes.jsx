@@ -15,6 +15,9 @@ import { useNavigate } from "react-router-dom";
 import Image from "@/components/Image";
 import { Separator } from "@/components/ui/separator";
 import Title from "@/components/Title";
+import { motion } from "framer-motion";
+
+const MotionCard = motion(Card);
 
 const Recipes = () => {
   const navigate = useNavigate();
@@ -38,11 +41,26 @@ const Recipes = () => {
     <>
       <Title>Recipes</Title>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {data.map((recipe) => (
-          <Card
+        {data.map((recipe, idx) => (
+          <MotionCard
             key={recipe._id}
             onClick={() => navigate(`/view-recipe/${recipe._id}`)}
             className="flex flex-col overflow-hidden rounded-lg shadow-md cursor-pointer"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.5,
+                delay: 0.15 * idx,
+              },
+            }}
+            whileHover={{
+              translateY: -10,
+            }}
+            whileTap={{
+              translateY: -5,
+            }}
           >
             <CardHeader className="flex flex-row gap-4 items-center p-4">
               <Avatar>
@@ -75,12 +93,12 @@ const Recipes = () => {
                 {recipe.name}
               </CardTitle>
               <CardDescription className="text-sm">
-                {recipe.instructions.length > 184
-                  ? `${recipe.instructions.substring(0, 184)} ...`
+                {recipe.instructions.length > 100
+                  ? `${recipe.instructions.substring(0, 100)} ...`
                   : recipe.instructions}
               </CardDescription>
             </CardContent>
-          </Card>
+          </MotionCard>
         ))}
       </div>
     </>

@@ -181,7 +181,8 @@ const Home = () => {
                 opacity: 1,
                 y: 0,
                 transition: {
-                  delay: 0.2 * idx,
+                  duration: 0.5,
+                  delay: 0.15 * idx,
                 },
               }}
               whileHover={{

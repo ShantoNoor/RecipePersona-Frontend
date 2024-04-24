@@ -27,6 +27,9 @@ import {
 import Image from "@/components/Image";
 import { Separator } from "@/components/ui/separator";
 import Title from "@/components/Title";
+import { motion } from "framer-motion";
+
+const MotionCard = motion(Card);
 
 const MyRecipes = () => {
   const { user } = useAuth();
@@ -52,10 +55,25 @@ const MyRecipes = () => {
     <>
       <Title>My Recipes</Title>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {data.map((recipe) => (
-          <Card
+        {data.map((recipe, idx) => (
+          <MotionCard
             key={recipe._id}
             className="flex flex-col overflow-hidden rounded-lg shadow-md"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: {
+                duration: 0.5,
+                delay: 0.15 * idx,
+              },
+            }}
+            whileHover={{
+              translateY: -10,
+            }}
+            whileTap={{
+              translateY: -5,
+            }}
           >
             <div
               onClick={() => navigate(`/view-recipe/${recipe._id}`)}
@@ -71,8 +89,8 @@ const MyRecipes = () => {
                   {recipe.name}
                 </CardTitle>
                 <CardDescription className="text-sm">
-                  {recipe.instructions.length > 184
-                    ? `${recipe.instructions.substring(0, 184)} ...`
+                  {recipe.instructions.length > 100
+                    ? `${recipe.instructions.substring(0, 100)} ...`
                     : recipe.instructions}
                 </CardDescription>
               </CardContent>
@@ -139,7 +157,7 @@ const MyRecipes = () => {
                 </Dialog>
               </div>
             </CardFooter>
-          </Card>
+          </MotionCard>
         ))}
       </div>
     </>

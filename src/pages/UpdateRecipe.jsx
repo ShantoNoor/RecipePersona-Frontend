@@ -510,7 +510,7 @@ const UpdateRecipe = () => {
                       <FormControl>
                         <Input
                           type="text"
-                          className="w-96"
+                          className="w-full"
                           placeholder="Please, provide your video url ..."
                           {...field}
                         />
