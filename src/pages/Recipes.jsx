@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import Title from "@/components/Title";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const MotionCard = motion(Card);
 
@@ -27,15 +27,31 @@ import {
   PaginationItem,
   PaginationLink,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import minutesToHoursAndMinutes from "@/utils/minutesToHoursAndMinutes";
+import { Button } from "@/components/ui/button";
+
+const cuisines = ["all", "italian", "chinese", "indian", "mexican", "japanese"];
 
 const Recipes = () => {
   const navigate = useNavigate();
 
   const [filterData, setFilterData] = useState([]);
 
+  const [search, setSearch] = useState("");
+  const [cuisine, setCuisine] = useState("all");
+  const [cookTime, setCookTime] = useState(0);
+
   const itemsPerPage = 8;
   const totalPages = Math.ceil(filterData.length / itemsPerPage);
-  const [currentPage, setCurrentPage] = useState(7);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const { data, error, isPending } = useQuery({
     queryKey: ["recipes"],
@@ -50,6 +66,31 @@ const Recipes = () => {
     },
   });
 
+  useEffect(() => {
+    if (data) {
+      let fr = data;
+
+      if (search) {
+        fr = fr.filter((recipe) =>
+          recipe.name.toLowerCase().includes(search.toLowerCase())
+        );
+      }
+
+      if (cuisine !== "all") {
+        fr = fr.filter(
+          (recipe) => recipe.cuisine.toLowerCase() === cuisine.toLowerCase()
+        );
+      }
+
+      if (cookTime) {
+        fr = fr.filter((recipe) => recipe.cookTime <= cookTime);
+      }
+
+      setFilterData(fr);
+      setCurrentPage(0);
+    }
+  }, [data, search, setSearch, cuisine, setCuisine, cookTime, setCookTime]);
+
   if (isPending) return <Spinner />;
   if (error) return "An error has occurred: " + error.message;
 
@@ -61,14 +102,64 @@ const Recipes = () => {
           type="search"
           placeholder="Search recipe here ... "
           onChange={(e) => {
-            setFilterData(
-              data.filter((recipe) =>
-                recipe.name.toLowerCase().includes(e.target.value.toLowerCase())
-              )
-            );
-            setCurrentPage(0);
+            setSearch(e.target.value);
           }}
+          value={search}
         />
+        <div className="mt-3 space-y-2">
+          <h2>Filter Recipes by Cuisine</h2>
+          <Select
+            value={cuisine}
+            onValueChange={(value) => setCuisine(value)}
+            defaultValue="all"
+          >
+            <SelectTrigger className="capitalize">
+              <SelectValue
+                placeholder="Select a cuisine"
+                className="text-muted"
+              />
+            </SelectTrigger>
+            <SelectContent>
+              {cuisines.map((cuisine) => (
+                <SelectItem
+                  key={cuisine}
+                  value={cuisine}
+                  className="capitalize"
+                >
+                  {cuisine}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="mt-3 space-y-2">
+          <h2>
+            Filter Recipes by CookTime: {minutesToHoursAndMinutes(cookTime)}
+          </h2>
+          <Slider
+            min={0}
+            max={200}
+            step={1}
+            value={[cookTime]}
+            onValueChange={(value) => setCookTime(value[0])}
+            className="w-full"
+          />
+        </div>
+
+        <div className="mt-6 text-center">
+          <Button
+            size="sm"
+            onClick={() => {
+              setSearch("");
+              setCuisine("all");
+              setCookTime(0);
+              setCurrentPage(0);
+            }}
+          >
+            Clear Filter
+          </Button>
+        </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {filterData
