@@ -5,7 +5,25 @@ import axiosPublic from "@/hooks/useAxios";
 import minutesToHoursAndMinutes from "@/utils/minutesToHoursAndMinutes";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import ReactStars from "react-rating-stars-component";
+import { Rating } from "@smastrom/react-rating";
+import "@smastrom/react-rating/style.css";
+
+const Star = (
+  <path d="M62 25.154H39.082L32 3l-7.082 22.154H2l18.541 13.693L13.459 61L32 47.309L50.541 61l-7.082-22.152L62 25.154z" />
+); // Source: https://www.svgrepo.com/svg/353297/star
+
+const customStyles = {
+  itemShapes: Star,
+  boxBorderWidth: 2,
+
+  activeFillColor: ["#FEE2E2", "#FFEDD5", "#FEF9C3", "#ECFCCB", "#D1FAE5"],
+  activeBoxColor: ["#da1600", "#db711a", "#dcb000", "#61bb00", "#009664"],
+  activeBoxBorderColor: ["#c41400", "#d05e00", "#cca300", "#498d00", "#00724c"],
+
+  inactiveFillColor: "white",
+  inactiveBoxColor: "#dddddd",
+  inactiveBoxBorderColor: "#a8a8a8",
+};
 
 import {
   Card,
@@ -18,12 +36,16 @@ import ProfileSection from "./MyProfile/ProfileSection";
 import Title from "@/components/Title";
 import { motion } from "framer-motion";
 import useAuth from "@/hooks/useAuth";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 const MotionCard = motion(Card);
 
 const ViewRecipe = () => {
   const { _id } = useParams();
   const { user } = useAuth();
+
+  const [rating, setRating] = useState(0);
 
   const {
     data: recipe,
@@ -42,9 +64,33 @@ const ViewRecipe = () => {
     },
   });
 
+  useEffect(() => {
+    if (user)
+      (async () => {
+        const rating = await axiosPublic.get(
+          `/ratings?author=${user._id}&recipe=${_id}`
+        );
+        if(rating?.data[0]?.rating) setRating(rating.data[0].rating);
+      })();
+  }, [user, _id, rating, setRating]);
+
   const updatedAt = new Date(recipe?.updatedAt);
   const options = { month: "long", day: "numeric", year: "numeric" };
   const formattedDate = updatedAt.toLocaleDateString("en-US", options);
+
+  const submitRating = (rating) => {
+    const rateData = {
+      rating: rating,
+      recipe: recipe._id,
+      author: user._id,
+    };
+
+    toast.promise(axiosPublic.put(`/ratings`, rateData), {
+      loading: "Rating, Please wait ...",
+      success: "Rating updated successfully",
+      error: "Failed to updated rating",
+    });
+  };
 
   if (isPending) return <Spinner />;
   if (error) return "An error has occurred: " + error.message;
@@ -225,21 +271,21 @@ const ViewRecipe = () => {
                 <>
                   <Separator />
                   <div className="mt-3 flex flex-col justify-center items-center">
-                    <h1 className="text-3xl text-center font-semibold">
+                    <h1 className="text-3xl text-center font-semibold mb-3">
                       Leave a Rating ...{" "}
                     </h1>
 
-                    <ReactStars
-                      count={5}
-                      onChange={(newRating) => {
-                        console.log(newRating);
+                    <Rating
+                      style={{ maxWidth: 500 }}
+                      value={rating}
+                      onChange={(value) => {
+                        setRating(value);
+                        submitRating(value);
                       }}
-                      size={24}
-                      isHalf={true}
-                      emptyIcon={<i className="far fa-star"></i>}
-                      halfIcon={<i className="fa fa-star-half-alt"></i>}
-                      fullIcon={<i className="fa fa-star"></i>}
-                      activeColor="#ffd700"
+                      itemStyles={customStyles}
+                      radius="large"
+                      spaceBetween="small"
+                      spaceInside="large"
                     />
                   </div>
                 </>
