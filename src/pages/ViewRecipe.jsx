@@ -5,6 +5,7 @@ import axiosPublic from "@/hooks/useAxios";
 import minutesToHoursAndMinutes from "@/utils/minutesToHoursAndMinutes";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
+import ReactStars from "react-rating-stars-component";
 
 import {
   Card,
@@ -16,11 +17,13 @@ import {
 import ProfileSection from "./MyProfile/ProfileSection";
 import Title from "@/components/Title";
 import { motion } from "framer-motion";
+import useAuth from "@/hooks/useAuth";
 
 const MotionCard = motion(Card);
 
 const ViewRecipe = () => {
   const { _id } = useParams();
+  const { user } = useAuth();
 
   const {
     data: recipe,
@@ -196,7 +199,7 @@ const ViewRecipe = () => {
                         key={idx}
                         className="overflow-hidden"
                         initial={{ opacity: 0, y: 30 }}
-                        whileInView={{
+                        animate={{
                           opacity: 1,
                           y: 0,
                           transition: {
@@ -218,6 +221,29 @@ const ViewRecipe = () => {
                   );
                 })}
               </motion.div>
+              {user && recipe.author._id !== user._id && (
+                <>
+                  <Separator />
+                  <div className="mt-3 flex flex-col justify-center items-center">
+                    <h1 className="text-3xl text-center font-semibold">
+                      Leave a Rating ...{" "}
+                    </h1>
+
+                    <ReactStars
+                      count={5}
+                      onChange={(newRating) => {
+                        console.log(newRating);
+                      }}
+                      size={24}
+                      isHalf={true}
+                      emptyIcon={<i className="far fa-star"></i>}
+                      halfIcon={<i className="fa fa-star-half-alt"></i>}
+                      fullIcon={<i className="fa fa-star"></i>}
+                      activeColor="#ffd700"
+                    />
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </motion.div>
