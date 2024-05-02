@@ -16,17 +16,22 @@ import Image from "@/components/Image";
 import { Separator } from "@/components/ui/separator";
 import Title from "@/components/Title";
 import { motion } from "framer-motion";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 const MotionCard = motion(Card);
 
 const Recipes = () => {
   const navigate = useNavigate();
 
+  const [filterData, setFilterData] = useState([]);
+
   const { data, error, isPending } = useQuery({
     queryKey: ["recipes"],
     queryFn: async () => {
       try {
         const result = await axiosPublic.get(`/recipes`);
+        setFilterData(result.data);
         return result.data;
       } catch (err) {
         console.error("Error fetching recipes:", err);
@@ -40,8 +45,20 @@ const Recipes = () => {
   return (
     <>
       <Title>Recipes</Title>
+      <div className="mb-6">
+        <Input
+          type="search"
+          placeholder="Search recipe here ... "
+          onChange={(e) => setFilterData(
+            data.filter(
+              (recipe) =>
+                recipe.name.toLowerCase().includes(e.target.value.toLowerCase())
+            )
+          )}
+        />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {data.map((recipe, idx) => (
+        {filterData?.map((recipe, idx) => (
           <MotionCard
             key={recipe._id}
             onClick={() => navigate(`/view-recipe/${recipe._id}`)}
