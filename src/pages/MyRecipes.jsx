@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { EyeIcon, Pencil, Trash } from "lucide-react";
+import { EyeIcon, Pencil, StarIcon, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -62,6 +62,8 @@ const MyRecipes = () => {
     },
   });
 
+  console.log(data)
+
   if (isPending) return <Spinner />;
   if (error) return "An error has occurred: " + error.message;
 
@@ -93,7 +95,7 @@ const MyRecipes = () => {
             >
               <div
                 onClick={() => navigate(`/view-recipe/${recipe._id}`)}
-                className="cursor-pointer flex-1"
+                className="cursor-pointer flex-1 relative"
               >
                 <CardContent className="p-4">
                   <Image
@@ -101,6 +103,23 @@ const MyRecipes = () => {
                     alt={recipe.name}
                     className="object-cover aspect-square w-full mb-4 rounded-md"
                   />
+                  <MotionCard
+                  className="absolute top-5 right-5 px-2 py-1 rounded bg-primary text-capitalize text-white"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.5,
+                      delay: 0.15 * idx,
+                    },
+                  }}
+                >
+                  <span className="flex justify-center items-center gap-1">
+                    <StarIcon className="size-5" />{" "}
+                    <span>{recipe.averageRating || 0}</span>
+                  </span>
+                </MotionCard>
                   <CardTitle className="mb-1 text-xl font-semibold">
                     {recipe.name}
                   </CardTitle>

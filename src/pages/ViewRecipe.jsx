@@ -38,6 +38,7 @@ import { motion } from "framer-motion";
 import useAuth from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { SquarePlay, StarIcon } from "lucide-react";
 
 const MotionCard = motion(Card);
 
@@ -51,6 +52,7 @@ const ViewRecipe = () => {
     data: recipe,
     error,
     isPending,
+    refetch,
   } = useQuery({
     queryKey: ["recipes", `_id=${_id}`],
     enabled: !!_id,
@@ -65,14 +67,13 @@ const ViewRecipe = () => {
   });
 
   useEffect(() => {
-    if (user)
-      (async () => {
-        const rating = await axiosPublic.get(
-          `/ratings?author=${user._id}&recipe=${_id}`
-        );
-        if(rating?.data[0]?.rating) setRating(rating.data[0].rating);
-      })();
-  }, [user, _id, rating, setRating]);
+    if (user && recipe?.author._id !== user._id && recipe?.ratings.length > 0) {
+      setRating(
+        recipe?.ratings?.filter((rate) => rate?.author === user?._id)[0].rating
+      );
+      refetch();
+    }
+  }, [user, recipe, setRating, rating, refetch]);
 
   const updatedAt = new Date(recipe?.updatedAt);
   const options = { month: "long", day: "numeric", year: "numeric" };
@@ -113,12 +114,12 @@ const ViewRecipe = () => {
               <div className="flex flex-col items-start justify-between w-full md:flex-row md:items-center">
                 <div className="flex items-center md:space-x-2">
                   <Image
-                    src={recipe.author.photo}
-                    alt={recipe.author.name}
+                    src={recipe?.author.photo}
+                    alt={recipe?.author.name}
                     className="w-4 h-4 border rounded-full"
                   />
                   <p className="text-sm">
-                    {recipe.author.name} • {formattedDate}
+                    {recipe?.author.name} • {formattedDate}
                   </p>
                 </div>
                 <div className="flex-shrink-0 mt-3 text-sm md:mt-0 relative">
@@ -193,6 +194,29 @@ const ViewRecipe = () => {
               >
                 # {recipe.cuisine}
               </MotionCard>
+              <MotionCard
+                className="px-2 py-1 rounded bg-primary text-capitalize text-white"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  transition: {
+                    duration: 0.5,
+                    delay: 0.15 * 1,
+                  },
+                }}
+                whileHover={{
+                  translateY: -10,
+                }}
+                whileTap={{
+                  translateY: -5,
+                }}
+              >
+                <span className="flex justify-center items-center gap-1">
+                  <StarIcon className="size-5" />{" "}
+                  <span>{recipe.averageRating || 0} </span>
+                </span>
+              </MotionCard>
               {recipe.video && (
                 <Link to={recipe.video} target="_blank">
                   <MotionCard
@@ -213,7 +237,9 @@ const ViewRecipe = () => {
                     }}
                     className="px-2 py-1 rounded bg-primary cursor-pointer text-white underline"
                   >
-                    # Video
+                    <span className="flex justify-center items-center gap-1">
+                      <SquarePlay className="size-5" /> <span>Video</span>
+                    </span>
                   </MotionCard>
                 </Link>
               )}

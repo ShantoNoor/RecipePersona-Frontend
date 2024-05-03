@@ -37,8 +37,17 @@ import {
 import { Slider } from "@/components/ui/slider";
 import minutesToHoursAndMinutes from "@/utils/minutesToHoursAndMinutes";
 import { Button } from "@/components/ui/button";
+import { StarIcon } from "lucide-react";
 
-const cuisines = ["all", "italian", "chinese", "indian", "mexican", "japanese"];
+const cuisines = [
+  "all",
+  "popular",
+  "italian",
+  "chinese",
+  "indian",
+  "mexican",
+  "japanese",
+];
 
 const Recipes = () => {
   const navigate = useNavigate();
@@ -68,7 +77,7 @@ const Recipes = () => {
 
   useEffect(() => {
     if (data) {
-      let fr = data;
+      let fr = [...data];
 
       if (search) {
         fr = fr.filter((recipe) =>
@@ -77,9 +86,15 @@ const Recipes = () => {
       }
 
       if (cuisine !== "all") {
-        fr = fr.filter(
-          (recipe) => recipe.cuisine.toLowerCase() === cuisine.toLowerCase()
-        );
+        if (cuisine === "popular") {
+          fr = fr.sort((a, b) => {
+            return (a.averageRating || 0) < (b.averageRating || 0);
+          });
+        } else {
+          fr = fr.filter(
+            (recipe) => recipe.cuisine.toLowerCase() === cuisine.toLowerCase()
+          );
+        }
       }
 
       if (cookTime) {
@@ -206,12 +221,29 @@ const Recipes = () => {
               <div className="px-4">
                 <Separator />
               </div>
-              <CardContent className="p-4">
+              <CardContent className="p-4 relative">
                 <Image
                   src={recipe.image}
                   alt={recipe.name}
                   className="object-cover aspect-square w-full mb-4 rounded-md"
                 />
+                <MotionCard
+                  className="absolute top-5 right-5 px-2 py-1 rounded bg-primary text-capitalize text-white"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.5,
+                      delay: 0.15 * idx,
+                    },
+                  }}
+                >
+                  <span className="flex justify-center items-center gap-1">
+                    <StarIcon className="size-5" />{" "}
+                    <span>{recipe.averageRating || 0}</span>
+                  </span>
+                </MotionCard>
                 <CardTitle className="mb-1 text-xl font-semibold">
                   {recipe.name}
                 </CardTitle>
