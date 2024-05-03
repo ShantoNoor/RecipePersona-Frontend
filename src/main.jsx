@@ -24,6 +24,7 @@ const Recipes = React.lazy(() => import("./pages/Recipes"));
 const AddRecipe = React.lazy(() => import("./pages/AddRecipe/AddRecipe"));
 const MyRecipes = React.lazy(() => import("./pages/MyRecipes"));
 const MyProfile = React.lazy(() => import("./pages/MyProfile/MyProfile"));
+const Recommendations = React.lazy(() => import("./pages/Recommendations"));
 
 const queryClient = new QueryClient();
 
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
       { path: "view-recipe/:_id", element: <ViewRecipe /> },
       { path: "update-recipe/:_id", element: <UpdateRecipe /> },
       { path: "my-recipes", element: <MyRecipes /> },
+      { path: "recommendations", element: <Recommendations /> },
       {
         path: "my-profile",
         element: <MyProfile />,

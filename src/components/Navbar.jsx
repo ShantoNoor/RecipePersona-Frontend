@@ -44,6 +44,7 @@ const Navbar = () => {
   const links = [
     { text: "Home", to: "/" },
     { text: "Recipes", to: "/recipes" },
+    { text: "Recommendations", to: "/recommendations" },
   ];
 
   return (

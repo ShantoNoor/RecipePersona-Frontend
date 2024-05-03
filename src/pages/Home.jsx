@@ -114,8 +114,8 @@ const Home = () => {
               Find it. Make it. Share it.
             </PageHeaderDescription>
             <PageActions className="flex flex-col md:flex-row gap-1 items-center justify-center">
-              <Button>View Recipes</Button>
-              <Button variant="outline">Get Recommendations</Button>
+              <Button onClick={() => navigate('/recipes')}>View Recipes</Button>
+              <Button onClick={() => navigate('/recommendations')} variant="outline">Get Recommendations</Button>
             </PageActions>
           </motion.div>
         </PageHeader>
