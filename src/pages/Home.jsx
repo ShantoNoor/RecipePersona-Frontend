@@ -24,6 +24,7 @@ import {
   HeartPulseIcon,
   Search,
   Star,
+  StarIcon,
 } from "lucide-react";
 
 import { motion } from "framer-motion";
@@ -151,18 +152,35 @@ const Home = () => {
                   className="flex min-w-[350px] md:min-w-auto basis-1/2 md:basis-1/4 lg:basis-1/6 pl-2 md:pl-4 items-center justify-center p-6 cursor-pointer"
                 >
                   <div className="border-secondary rounded-lg overflow-hidden border">
-                    <div className="overflow-hidden">
+                    <div className="overflow-hidden relative">
                       <Image
                         src={recipe.image}
                         className="h-auto w-auto object-cover transition-all aspect-square hover:scale-110"
                       />
+                      <MotionCard
+                        className="absolute top-3 right-3 px-2 py-1 rounded bg-primary text-capitalize text-white"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{
+                          opacity: 1,
+                          y: 0,
+                          transition: {
+                            duration: 0.5,
+                            delay: 0.15 * idx,
+                          },
+                        }}
+                      >
+                        <span className="flex justify-center items-center gap-1">
+                          <StarIcon className="size-5" />{" "}
+                          <span>{recipe.averageRating}</span>
+                        </span>
+                      </MotionCard>
                     </div>
                     <div className="space-y-1 text-sm p-2">
                       <h3 className="font-medium leading-none">
                         {recipe.name}
                       </h3>
                       <p className="text-xs text-muted-foreground">
-                        {recipe.cuisine}
+                        {recipe.cuisine || "Unknown"}
                       </p>
                     </div>
                   </div>
