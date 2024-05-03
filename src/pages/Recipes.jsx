@@ -30,6 +30,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -51,6 +52,7 @@ const cuisines = [
 
 const Recipes = () => {
   const navigate = useNavigate();
+  const [disableNavigation, setDisableNavigation] = useState(false);
 
   const [filterData, setFilterData] = useState([]);
 
@@ -87,9 +89,7 @@ const Recipes = () => {
 
       if (cuisine !== "all") {
         if (cuisine === "popular") {
-          fr = fr.sort((a, b) => {
-            return (a.averageRating || 0) < (b.averageRating || 0);
-          });
+          fr.sort((a, b) => b.averageRating - a.averageRating);
         } else {
           fr = fr.filter(
             (recipe) => recipe.cuisine.toLowerCase() === cuisine.toLowerCase()
@@ -112,7 +112,7 @@ const Recipes = () => {
   return (
     <>
       <Title>Recipes</Title>
-      <div className="mb-6">
+      <div className="mb-8 space-y-6">
         <Input
           type="search"
           placeholder="Search recipe here ... "
@@ -125,8 +125,14 @@ const Recipes = () => {
           <h2>Filter Recipes by Cuisine</h2>
           <Select
             value={cuisine}
-            onValueChange={(value) => setCuisine(value)}
-            defaultValue="all"
+            onValueChange={(value) => {
+              setDisableNavigation(true);
+              setCuisine(value);
+              setTimeout(() => {
+                setDisableNavigation(false);
+              }, 500);
+            }}
+            defaultValue={cuisine[0]}
           >
             <SelectTrigger className="capitalize">
               <SelectValue
@@ -135,15 +141,17 @@ const Recipes = () => {
               />
             </SelectTrigger>
             <SelectContent>
-              {cuisines.map((cuisine) => (
-                <SelectItem
-                  key={cuisine}
-                  value={cuisine}
-                  className="capitalize"
-                >
-                  {cuisine}
-                </SelectItem>
-              ))}
+              <SelectGroup>
+                {cuisines.map((cuisine) => (
+                  <SelectItem
+                    key={cuisine}
+                    value={cuisine}
+                    className="capitalize"
+                  >
+                    {cuisine}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
             </SelectContent>
           </Select>
         </div>
@@ -182,7 +190,9 @@ const Recipes = () => {
           .map((recipe, idx) => (
             <MotionCard
               key={recipe._id}
-              onClick={() => navigate(`/view-recipe/${recipe._id}`)}
+              onClick={() =>
+                !disableNavigation && navigate(`/view-recipe/${recipe._id}`)
+              }
               className="flex flex-col overflow-hidden rounded-lg shadow-md cursor-pointer"
               initial={{ opacity: 0, y: 30 }}
               animate={{
