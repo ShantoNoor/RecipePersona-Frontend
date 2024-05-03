@@ -14,6 +14,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import General from "./pages/MyProfile/General";
 import Preferences from "./pages/MyProfile/Preferences";
+import PrivateRoute from "./components/PrivateRoute";
 const Navbar = React.lazy(() => import("./components/Navbar"));
 const Footer = React.lazy(() => import("./components/Footer"));
 const Login = React.lazy(() => import("./pages/Login"));
@@ -43,14 +44,46 @@ const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "recipes", element: <Recipes /> },
-      { path: "add-recipe", element: <AddRecipe /> },
+      {
+        path: "add-recipe",
+        element: (
+          <PrivateRoute>
+            <AddRecipe />
+          </PrivateRoute>
+        ),
+      },
       { path: "view-recipe/:_id", element: <ViewRecipe /> },
-      { path: "update-recipe/:_id", element: <UpdateRecipe /> },
-      { path: "my-recipes", element: <MyRecipes /> },
-      { path: "recommendations", element: <Recommendations /> },
+      {
+        path: "update-recipe/:_id",
+        element: (
+          <PrivateRoute>
+            <UpdateRecipe />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "my-recipes",
+        element: (
+          <PrivateRoute>
+            <MyRecipes />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "recommendations",
+        element: (
+          <PrivateRoute>
+            <Recommendations />
+          </PrivateRoute>
+        ),
+      },
       {
         path: "my-profile",
-        element: <MyProfile />,
+        element: (
+          <PrivateRoute>
+            <MyProfile />
+          </PrivateRoute>
+        ),
         children: [
           {
             path: "/my-profile",
