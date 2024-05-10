@@ -24,6 +24,7 @@ const UpdateRecipe = React.lazy(() => import("./pages/UpdateRecipe"));
 const Recipes = React.lazy(() => import("./pages/Recipes"));
 const AddRecipe = React.lazy(() => import("./pages/AddRecipe/AddRecipe"));
 const MyRecipes = React.lazy(() => import("./pages/MyRecipes"));
+const MyFavorites = React.lazy(() => import("./pages/MyFavorites"));
 const MyProfile = React.lazy(() => import("./pages/MyProfile/MyProfile"));
 const Recommendations = React.lazy(() => import("./pages/Recommendations"));
 
@@ -66,6 +67,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <MyRecipes />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "my-favorites",
+        element: (
+          <PrivateRoute>
+            <MyFavorites />
           </PrivateRoute>
         ),
       },

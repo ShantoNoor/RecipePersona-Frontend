@@ -238,7 +238,7 @@ const Recipes = () => {
                   className="object-cover aspect-square w-full mb-4 rounded-md"
                 />
                 <MotionCard
-                  className="absolute top-5 right-5 px-2 py-1 rounded bg-primary text-capitalize text-white"
+                  className="absolute top-5 right-5 px-2 py-1 rounded bg-primary capitalize text-white"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{
                     opacity: 1,

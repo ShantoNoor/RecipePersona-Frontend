@@ -11,7 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { EyeIcon, Pencil, StarIcon, Trash } from "lucide-react";
+import { EyeIcon, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/pagination";
 import { PageHeaderHeading } from "@/components/ui/page-header";
 
-const MyRecipes = () => {
+const MyFavorites = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -50,11 +50,12 @@ const MyRecipes = () => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const { data, error, isPending, refetch } = useQuery({
-    queryKey: ["recipes", `author=${user?._id}`],
+    queryKey: ["favorites", `author=${user?._id}`],
     enabled: !!user,
     queryFn: async () => {
       try {
-        const result = await axiosPublic.get(`/recipes?author=${user._id}`);
+        const result = await axiosPublic.get(`/favorites?author=${user._id}`);
+        console.log(result.data);
         setFilterData(result.data);
         return result.data;
       } catch (err) {
@@ -69,14 +70,14 @@ const MyRecipes = () => {
   if (data.length === 0) {
     return (
       <PageHeaderHeading className="text-white mt-8">
-        You have not added any recipes yet!
+        You have not added any recipes to your favorites
       </PageHeaderHeading>
     );
   }
 
   return (
     <>
-      <Title>My Recipes</Title>
+      <Title>My Favorite Recipes</Title>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {filterData
           ?.slice(currentPage * itemsPerPage, itemsPerPage * (currentPage + 1))
@@ -110,23 +111,6 @@ const MyRecipes = () => {
                     alt={recipe.name}
                     className="object-cover aspect-square w-full mb-4 rounded-md"
                   />
-                  <MotionCard
-                    className="absolute top-5 right-5 px-2 py-1 rounded bg-primary capitalize text-white"
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      transition: {
-                        duration: 0.5,
-                        delay: 0.15 * idx,
-                      },
-                    }}
-                  >
-                    <span className="flex justify-center items-center gap-1">
-                      <StarIcon className="size-5" />{" "}
-                      <span>{recipe.averageRating || 0}</span>
-                    </span>
-                  </MotionCard>
                   <CardTitle className="mb-1 text-xl font-semibold">
                     {recipe.name}
                   </CardTitle>
@@ -150,14 +134,6 @@ const MyRecipes = () => {
                     <EyeIcon className="size-4 text-primary" />
                   </Button>
 
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => navigate(`/update-recipe/${recipe._id}`)}
-                  >
-                    <Pencil className="size-4 text-primary" />
-                  </Button>
-
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="ghost" size="icon">
@@ -177,7 +153,7 @@ const MyRecipes = () => {
                         <Button
                           onClick={() => {
                             toast.promise(
-                              axiosPublic.delete(`/recipes/${recipe._id}`),
+                              axiosPublic.delete(`/favorites/${user._id}-${recipe._id}`),
                               {
                                 loading: "Deleting recipe, Please wait ...",
                                 success: () => {
@@ -222,4 +198,4 @@ const MyRecipes = () => {
   );
 };
 
-export default MyRecipes;
+export default MyFavorites;

@@ -114,8 +114,13 @@ const Home = () => {
               Find it. Make it. Share it.
             </PageHeaderDescription>
             <PageActions className="flex flex-col md:flex-row gap-1 items-center justify-center">
-              <Button onClick={() => navigate('/recipes')}>View Recipes</Button>
-              <Button onClick={() => navigate('/recommendations')} variant="outline">Get Recommendations</Button>
+              <Button onClick={() => navigate("/recipes")}>View Recipes</Button>
+              <Button
+                onClick={() => navigate("/recommendations")}
+                variant="outline"
+              >
+                Get Recommendations
+              </Button>
             </PageActions>
           </motion.div>
         </PageHeader>
@@ -158,7 +163,7 @@ const Home = () => {
                         className="h-auto w-auto object-cover transition-all aspect-square hover:scale-110"
                       />
                       <MotionCard
-                        className="absolute top-3 right-3 px-2 py-1 rounded bg-primary text-capitalize text-white"
+                        className="absolute top-3 right-3 px-2 py-1 rounded bg-primary capitalize text-white"
                         initial={{ opacity: 0, y: 30 }}
                         animate={{
                           opacity: 1,
@@ -179,8 +184,8 @@ const Home = () => {
                       <h3 className="font-medium leading-none">
                         {recipe.name}
                       </h3>
-                      <p className="text-xs text-muted-foreground">
-                        {recipe.cuisine || "Unknown"}
+                      <p className="text-xs text-muted-foreground capitalize">
+                        {recipe.cuisine || "unknown"}
                       </p>
                     </div>
                   </div>

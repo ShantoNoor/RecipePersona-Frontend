@@ -38,7 +38,7 @@ import { motion } from "framer-motion";
 import useAuth from "@/hooks/useAuth";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { SquarePlay, StarIcon } from "lucide-react";
+import { PlusSquareIcon, SquarePlay, StarIcon } from "lucide-react";
 
 const MotionCard = motion(Card);
 
@@ -67,10 +67,16 @@ const ViewRecipe = () => {
   });
 
   useEffect(() => {
-    if (user && recipe?.author._id !== user._id && recipe?.ratings.length > 0) {
-      setRating(
-        recipe?.ratings?.filter((rate) => rate?.author === user?._id)[0].rating
+    if (
+      user &&
+      recipe &&
+      recipe?.author._id !== user._id &&
+      recipe?.ratings.length > 0
+    ) {
+      const userRating = recipe?.ratings?.filter(
+        (rate) => rate?.author === user?._id
       );
+      setRating(userRating.length === 1 ? userRating[0].rating : 0);
       refetch();
     }
   }, [user, recipe, setRating, rating, refetch]);
@@ -90,6 +96,19 @@ const ViewRecipe = () => {
       loading: "Rating, Please wait ...",
       success: "Rating updated successfully",
       error: "Failed to updated rating",
+    });
+  };
+
+  const addToFavorite = () => {
+    const data = {
+      recipe: recipe._id,
+      author: user._id,
+    };
+
+    toast.promise(axiosPublic.put(`/favorites`, data), {
+      loading: "Adding recipe to favorite list, Please wait ...",
+      success: "Recipe added to favorite list successfully",
+      error: "Failed to add recipe to favorite list",
     });
   };
 
@@ -170,12 +189,12 @@ const ViewRecipe = () => {
                 whileTap={{
                   translateY: -5,
                 }}
-                className="px-2 py-1 rounded bg-primary text-capitalize text-white"
+                className="px-2 py-1 rounded bg-primary capitalize text-white"
               >
                 # {recipe.category}
               </MotionCard>
               <MotionCard
-                className="px-2 py-1 rounded bg-primary text-capitalize text-white"
+                className="px-2 py-1 rounded bg-primary capitalize text-white"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{
                   opacity: 1,
@@ -195,7 +214,7 @@ const ViewRecipe = () => {
                 # {recipe.cuisine}
               </MotionCard>
               <MotionCard
-                className="px-2 py-1 rounded bg-primary text-capitalize text-white"
+                className="px-2 py-1 rounded bg-primary capitalize text-white"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{
                   opacity: 1,
@@ -242,6 +261,33 @@ const ViewRecipe = () => {
                     </span>
                   </MotionCard>
                 </Link>
+              )}
+
+              {user && (
+                <MotionCard
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.5,
+                      delay: 0.15 * 2,
+                    },
+                  }}
+                  whileHover={{
+                    translateY: -10,
+                  }}
+                  whileTap={{
+                    translateY: -5,
+                  }}
+                  onClick={addToFavorite}
+                  className="px-2 py-1 rounded bg-primary cursor-pointer text-white underline"
+                >
+                  <span className="flex justify-center items-center gap-1">
+                    <PlusSquareIcon className="size-5" />{" "}
+                    <span>Add to Favorite</span>
+                  </span>
+                </MotionCard>
               )}
             </div>
 

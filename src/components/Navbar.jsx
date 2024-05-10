@@ -134,6 +134,11 @@ const Navbar = () => {
                     My Recipes
                   </DropdownMenuItem>
                 </Link>
+                <Link to="/my-favorites">
+                  <DropdownMenuItem className="cursor-pointer">
+                    My Favorites
+                  </DropdownMenuItem>
+                </Link>
                 <Link to="/my-profile">
                   <DropdownMenuItem className="cursor-pointer">
                     My Profile
