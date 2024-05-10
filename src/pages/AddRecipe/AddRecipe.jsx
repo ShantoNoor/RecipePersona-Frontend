@@ -230,7 +230,7 @@ const AddRecipe = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
-          className="bg-[url(https://e0.pxfuel.com/wallpapers/461/160/desktop-wallpaper-recipe-book-recipe-book-stock.jpg)] bg-no-repeat bg-cover bg-center md:p-10 rounded-lg"
+          className={`bg-[url("https://e0.pxfuel.com/wallpapers/461/160/desktop-wallpaper-recipe-book-recipe-book-stock.jpg")] bg-no-repeat bg-cover bg-center md:p-10 rounded-lg`}
         >
           <PageHeader className="relative">
             <motion.div

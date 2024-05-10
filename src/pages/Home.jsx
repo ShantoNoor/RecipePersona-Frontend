@@ -84,7 +84,7 @@ const Home = () => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
-        className="bg-[url(https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/10/14/FN_ingredient-substitutions_s4x3.jpg.rend.hgtvcom.1280.720.suffix/1634257696464.jpeg)] bg-no-repeat bg-cover bg-center md:p-10 rounded-lg"
+        className={`bg-[url("https://food.fnr.sndimg.com/content/dam/images/food/fullset/2021/10/14/FN_ingredient-substitutions_s4x3.jpg.rend.hgtvcom.1280.720.suffix/1634257696464.jpeg")] bg-no-repeat bg-cover bg-center md:p-10 rounded-lg`}
       >
         <PageHeader className="relative">
           <motion.div
